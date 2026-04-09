@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Loader2, MapPin, Search } from "lucide-react";
 
-export default function ExplorePage() {
+// আলাদা কম্পোনেন্ট যেখানে useSearchParams ব্যবহার হবে
+function ExploreContent() {
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -60,14 +61,14 @@ export default function ExplorePage() {
         <div className="w-full md:w-1/4 space-y-6">
           <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 sticky top-24">
             <h2 className="text-xl font-semibold mb-6">Filters</h2>
-            
+
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Location or Keywords</label>
                 <div className="relative">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                  <Input 
-                    placeholder="E.g., Paris, Food..." 
+                  <Input
+                    placeholder="E.g., Paris, Food..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-9"
@@ -97,11 +98,11 @@ export default function ExplorePage() {
                   <span>Max Price ($)</span>
                   <span>${maxPrice}</span>
                 </label>
-                <Slider 
-                  value={[maxPrice]} 
-                  onValueChange={(v) => setMaxPrice(v[0])} 
-                  max={2000} 
-                  step={10} 
+                <Slider
+                  value={[maxPrice]}
+                  onValueChange={(v) => setMaxPrice(v[0])}
+                  max={2000}
+                  step={10}
                   className="py-4"
                 />
               </div>
@@ -116,7 +117,7 @@ export default function ExplorePage() {
         {/* Results */}
         <div className="w-full md:w-3/4">
           <h1 className="text-3xl font-bold mb-6">Explore the best tours</h1>
-          
+
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -135,10 +136,10 @@ export default function ExplorePage() {
                 <Card key={tour._id} className="overflow-hidden hover:shadow-md transition-all group border-slate-200">
                   <div className="relative h-48 bg-slate-100 overflow-hidden">
                     {tour.images && tour.images.length > 0 ? (
-                      <Image 
-                        src={tour.images[0]} 
-                        alt={tour.title} 
-                        fill 
+                      <Image
+                        src={tour.images[0]}
+                        alt={tour.title}
+                        fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         unoptimized
                       />
@@ -183,5 +184,18 @@ export default function ExplorePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// মূল পেজ কম্পোনেন্ট - Suspense দিয়ে র‍্যাপ করা
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    }>
+      <ExploreContent />
+    </Suspense>
   );
 }
