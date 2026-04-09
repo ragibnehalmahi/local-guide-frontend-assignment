@@ -89,9 +89,9 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
   const handleCancelBooking = async () => {
     if (!selectedBooking) return;
     
-    setLoadingId(selectedBooking.id);
+    setLoadingId(selectedBooking._id);
     try {
-      const result = await adminCancelBooking(selectedBooking.id);
+      const result = await adminCancelBooking(selectedBooking._id);
       if (result.success) {
         toast.success("Booking cancelled successfully");
         router.refresh();
@@ -111,9 +111,9 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
   const handleRefundBooking = async () => {
     if (!selectedBooking) return;
     
-    setLoadingId(selectedBooking.id);
+    setLoadingId(selectedBooking._id);
     try {
-      const result = await adminRefundBooking(selectedBooking.id);
+      const result = await adminRefundBooking(selectedBooking._id);
       if (result.success) {
         toast.success("Refund processed successfully");
         router.refresh();
@@ -335,9 +335,9 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
             </TableHeader>
             <TableBody>
               {filteredBookings.map((booking: IBooking) => (
-                <TableRow key={booking.id} className="hover:bg-muted/50">
+                <TableRow key={booking._id} className="hover:bg-muted/50">
                   <TableCell>
-                    <div className="font-mono text-xs">{booking.id.slice(-8)}</div>
+                    <div className="font-mono text-xs">{booking._id.slice(-8)}</div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -384,7 +384,7 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/bookings/${booking.id}`)}>
+                        <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/bookings/${booking._id}`)}>
                           <Eye className="mr-2 h-4 w-4" />
                           View Details
                         </DropdownMenuItem>
@@ -412,7 +412,7 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
                         )}
                         {booking.status === BookingStatus.PENDING && (
                           <DropdownMenuItem 
-                            onClick={() => handleStatusUpdate(booking.id, BookingStatus.CONFIRMED)}
+                            onClick={() => handleStatusUpdate(booking._id, BookingStatus.CONFIRMED)}
                           >
                             <CheckCircle className="mr-2 h-4 w-4" />
                             Confirm Booking
@@ -420,7 +420,7 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
                         )}
                         {booking.status === BookingStatus.CONFIRMED && (
                           <DropdownMenuItem 
-                            onClick={() => handleStatusUpdate(booking.id, BookingStatus.COMPLETED)}
+                            onClick={() => handleStatusUpdate(booking._id, BookingStatus.COMPLETED)}
                           >
                             <CheckCircle className="mr-2 h-4 w-4" />
                             Mark as Completed
@@ -455,7 +455,7 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Cancel Booking</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to cancel booking #{selectedBooking?.id.slice(-8)}? 
+              Are you sure you want to cancel booking #{selectedBooking?._id.slice(-8)}? 
               {selectedBooking?.paymentStatus === PaymentStatus.PAID && 
                 " This will automatically trigger a refund to the tourist."}
             </AlertDialogDescription>
@@ -465,9 +465,9 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
             <AlertDialogAction
               onClick={handleCancelBooking}
               className="bg-red-600 hover:bg-red-700"
-              disabled={loadingId === selectedBooking?.id}
+              disabled={loadingId === selectedBooking?._id}
             >
-              {loadingId === selectedBooking?.id ? "Cancelling..." : "Cancel Booking"}
+              {loadingId === selectedBooking?._id ? "Cancelling..." : "Cancel Booking"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -480,7 +480,7 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
             <AlertDialogTitle>Process Refund</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to refund ${selectedBooking?.totalPrice.toFixed(2)} 
-              for booking #{selectedBooking?.id.slice(-8)}? 
+              for booking #{selectedBooking?._id.slice(-8)}? 
               The tourist will receive the refund within 5-7 business days.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -489,9 +489,9 @@ export default function AdminBookings({ bookings }: AdminBookingsProps) {
             <AlertDialogAction
               onClick={handleRefundBooking}
               className="bg-red-600 hover:bg-red-700"
-              disabled={loadingId === selectedBooking?.id}
+              disabled={loadingId === selectedBooking?._id}
             >
-              {loadingId === selectedBooking?.id ? "Processing..." : "Process Refund"}
+              {loadingId === selectedBooking?._id ? "Processing..." : "Process Refund"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

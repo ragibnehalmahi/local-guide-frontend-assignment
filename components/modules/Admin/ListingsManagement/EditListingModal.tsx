@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { updateListing, updateListingStatus } from "@/services/admin/admin.service";
+import { ListingStatus } from "@/types/listing.interface";
 
 interface Listing {
   _id: string;
@@ -25,7 +26,7 @@ interface Listing {
   price: number;
   duration: number;
   category: string;
-  status: "active" | "inactive" | "pending";
+  status: "PENDING" | "APPROVED" | "REJECTED" | "BLOCKED";
   location: {
     city: string;
     country: string;
@@ -126,7 +127,7 @@ export default function EditListingModal({
 
     try {
       setLoading(true);
-      const response = await updateListingStatus(listing._id, newStatus);
+      const response = await updateListingStatus(listing._id, newStatus as ListingStatus);
       
       if (response.success) {
         toast.success(`Listing status updated to ${newStatus}`);
@@ -160,16 +161,16 @@ export default function EditListingModal({
                 <p className="text-sm text-gray-500">Quickly update listing status</p>
               </div>
               <div className="flex gap-2">
-                {["active", "inactive", "pending"].map((stat) => (
+                {["PENDING", "APPROVED", "REJECTED", "BLOCKED"].map((stat) => (
                   <Button
                     key={stat}
                     type="button"
-                    variant={status === stat ? "default" : "outline"}
+                    variant={status.toUpperCase() === stat ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleStatusChange(stat)}
                     disabled={loading}
                   >
-                    {stat.charAt(0).toUpperCase() + stat.slice(1)}
+                    {stat.charAt(0).toUpperCase() + stat.slice(1).toLowerCase()}
                   </Button>
                 ))}
               </div>

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { getGuideReviews } from "@/services/reviews/review.service";
+import { getReviewsForGuide } from "@/services/reviews/review.service";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
@@ -38,7 +38,7 @@ export default function TourDetailsPage() {
 
         // Fetch reviews for this guide
         if (tourData.guide?._id) {
-          const reviewsRes = await getGuideReviews(tourData.guide._id);
+          const reviewsRes = await getReviewsForGuide(tourData.guide._id);
           if (reviewsRes.success) {
             setReviews(reviewsRes.data);
           }

@@ -53,7 +53,7 @@ import {
   Clock,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { adminDeleteListing, updateListingStatus } from "@/services/admin/admin.service";
+import { deleteListing, updateListingStatus } from "@/services/admin/admin.service";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
@@ -93,7 +93,7 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
       const result = await updateListingStatus(listingId, status);
       if (result.success) {
         setListings(listings.map(listing => 
-          listing.id === listingId ? { ...listing, status } : listing
+          listing._id === listingId ? { ...listing, status } : listing
         ));
         toast.success(`Listing ${status === ListingStatus.APPROVED ? 'approved' : 'rejected'} successfully`);
       } else {
@@ -110,11 +110,11 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
   const handleDeleteListing = async () => {
     if (!selectedListing) return;
     
-    setLoadingId(selectedListing.id);
+    setLoadingId(selectedListing._id);
     try {
-      const result = await adminDeleteListing(selectedListing.id);
+      const result = await deleteListing(selectedListing._id);
       if (result.success) {
-        setListings(listings.filter(listing => listing.id !== selectedListing.id));
+        setListings(listings.filter(listing => listing._id !== selectedListing._id));
         toast.success("Listing deleted successfully");
       } else {
         toast.error(result.message || "Failed to delete listing");
@@ -277,7 +277,7 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
             </TableHeader>
             <TableBody>
               {filteredListings.map((listing) => (
-                <TableRow key={listing.id} className="hover:bg-muted/50">
+                <TableRow key={listing._id} className="hover:bg-muted/50">
                   <TableCell>
                     <div className="space-y-1">
                       <div className="font-medium">{listing.title}</div>
@@ -314,8 +314,8 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleStatusUpdate(listing.id, ListingStatus.APPROVED)}
-                            disabled={loadingId === listing.id}
+                            onClick={() => handleStatusUpdate(listing._id, ListingStatus.APPROVED)}
+                            disabled={loadingId === listing._id}
                             className="h-8 text-green-600"
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
@@ -328,7 +328,7 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
                               setSelectedListing(listing);
                               setShowRejectDialog(true);
                             }}
-                            disabled={loadingId === listing.id}
+                            disabled={loadingId === listing._id}
                             className="h-8 text-red-600"
                           >
                             <XCircle className="h-3 w-3 mr-1" />
@@ -351,17 +351,17 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => router.push(`/listings/${listing.id}`)}>
+                        <DropdownMenuItem onClick={() => router.push(`/listings/${listing._id}`)}>
                           <Eye className="mr-2 h-4 w-4" />
                           View Public
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/listings/${listing.id}`)}>
+                        <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/listings/${listing._id}`)}>
                           <Eye className="mr-2 h-4 w-4" />
                           View Details
                         </DropdownMenuItem>
                         {listing.status === ListingStatus.APPROVED && (
                           <DropdownMenuItem 
-                            onClick={() => handleStatusUpdate(listing.id, ListingStatus.BLOCKED)}
+                            onClick={() => handleStatusUpdate(listing._id, ListingStatus.BLOCKED)}
                           >
                             <AlertTriangle className="mr-2 h-4 w-4" />
                             Block Listing
@@ -369,7 +369,7 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
                         )}
                         {listing.status === ListingStatus.BLOCKED && (
                           <DropdownMenuItem 
-                            onClick={() => handleStatusUpdate(listing.id, ListingStatus.APPROVED)}
+                            onClick={() => handleStatusUpdate(listing._id, ListingStatus.APPROVED)}
                           >
                             <CheckCircle className="mr-2 h-4 w-4" />
                             Unblock Listing
@@ -423,9 +423,9 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
             <AlertDialogAction
               onClick={handleDeleteListing}
               className="bg-red-600 hover:bg-red-700"
-              disabled={loadingId === selectedListing?.id}
+              disabled={loadingId === selectedListing?._id}
             >
-              {loadingId === selectedListing?.id ? "Deleting..." : "Delete Listing"}
+              {loadingId === selectedListing?._id ? "Deleting..." : "Delete Listing"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -446,15 +446,15 @@ export default function AdminListings({ initialListings }: AdminListingsProps) {
             <AlertDialogAction
               onClick={() => {
                 if (selectedListing) {
-                  handleStatusUpdate(selectedListing.id, ListingStatus.REJECTED);
+                  handleStatusUpdate(selectedListing._id, ListingStatus.REJECTED);
                   setShowRejectDialog(false);
                   setSelectedListing(null);
                 }
               }}
               className="bg-red-600 hover:bg-red-700"
-              disabled={loadingId === selectedListing?.id}
+              disabled={loadingId === selectedListing?._id}
             >
-              {loadingId === selectedListing?.id ? "Rejecting..." : "Reject Listing"}
+              {loadingId === selectedListing?._id ? "Rejecting..." : "Reject Listing"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

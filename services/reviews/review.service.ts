@@ -80,7 +80,7 @@ export async function getCompletedBookingsForReview() {
  * ✅ Get guide's reviews (public)
  * GET /review/:guideId
  */
-export async function getGuideReviews(guideId: string) {
+export async function getReviewsForGuide(guideId: string) {
   try {
     const response = await serverFetch.get(`/review/${guideId}`);
     const result = await response.json();
@@ -99,10 +99,4 @@ export async function getGuideReviews(guideId: string) {
     };
   }
 }
-// ODE_ENV === "development"
-//           ? error.message
-//           : "Failed to fetch guide reviews",
-//     };
-//   }
-// }
 

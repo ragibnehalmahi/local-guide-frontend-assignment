@@ -133,7 +133,8 @@ export async function adminRefundBooking(bookingId: string) {
 // Get All Reviews
 export async function getAllReviews(queryString?: string) {
   try {
-    const url = `/admin/reviews${queryString ? `?${queryString}` : ""}`;
+    // Standardizing to singular prefix /review/all
+    const url = `/review/all${queryString ? `?${queryString}` : ""}`;
     const response = await serverFetch.get(url, {
       next: {
         tags: ["admin-reviews"],
@@ -161,7 +162,7 @@ export async function getAllReviews(queryString?: string) {
 export async function updateReviewStatus(reviewId: string, status: ReviewStatus) {
   try {
     const response = await serverFetch.patch(
-      `/admin/reviews/${reviewId}/status`,
+      `/review/${reviewId}/status`,
       {
         body: JSON.stringify({ status }),
         headers: {
@@ -191,7 +192,7 @@ export async function updateReviewStatus(reviewId: string, status: ReviewStatus)
 export async function deleteReview(reviewId: string) {
   try {
     const response = await serverFetch.delete(
-      `/admin/reviews/${reviewId}`
+      `/review/${reviewId}`
     );
 
     const result = await response.json();
@@ -369,6 +370,29 @@ export async function deleteListing(listingId: string) {
   } catch (error: any) {
     console.error("Error deleting listing:", error);
     return { success: false, message: error.message || "Failed to delete listing" };
+  }
+}
+
+/**
+ * Update Listing Status (Moderation)
+ */
+export async function updateListingStatus(listingId: string, status: ListingStatus) {
+  try {
+    const response = await serverFetch.patch(
+      `/listing/${listingId}/status`,
+      {
+        body: JSON.stringify({ status }),
+      }
+    );
+
+    const result = await response.json();
+    if (result.success) {
+      revalidateTag('admin-listings', { expire: 0 });
+    }
+    return result;
+  } catch (error: any) {
+    console.error("Error updating listing status:", error);
+    return { success: false, message: "Failed to update listing status" };
   }
 }
 

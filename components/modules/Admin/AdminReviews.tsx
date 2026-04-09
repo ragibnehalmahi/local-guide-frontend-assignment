@@ -94,7 +94,7 @@ export default function AdminReviews({ initialReviews }: AdminReviewsProps) {
       const result = await updateReviewStatus(reviewId, status);
       if (result.success) {
         setReviews(reviews.map(review => 
-          review.id === reviewId ? { ...review, status } : review
+          (review._id === reviewId || review.id === reviewId) ? { ...review, status } : review
         ));
         toast.success(`Review ${status === ReviewStatus.APPROVED ? 'approved' : 'rejected'} successfully`);
       } else {
@@ -111,11 +111,12 @@ export default function AdminReviews({ initialReviews }: AdminReviewsProps) {
   const handleDeleteReview = async () => {
     if (!selectedReview) return;
     
-    setLoadingId(selectedReview.id);
+    const reviewId = selectedReview._id || selectedReview.id;
+    setLoadingId(reviewId);
     try {
-      const result = await deleteReview(selectedReview.id);
+      const result = await deleteReview(reviewId);
       if (result.success) {
-        setReviews(reviews.filter(review => review.id !== selectedReview.id));
+        setReviews(reviews.filter(review => (review._id !== reviewId && review.id !== reviewId)));
         toast.success("Review deleted successfully");
       } else {
         toast.error(result.message || "Failed to delete review");
@@ -133,12 +134,13 @@ export default function AdminReviews({ initialReviews }: AdminReviewsProps) {
   const handleFlagReview = async () => {
     if (!selectedReview || !flagReason.trim()) return;
     
-    setLoadingId(selectedReview.id);
+    const reviewId = selectedReview._id || selectedReview.id;
+    setLoadingId(reviewId);
     try {
-      const result = await updateReviewStatus(selectedReview.id, ReviewStatus.FLAGGED);
+      const result = await updateReviewStatus(reviewId, ReviewStatus.FLAGGED);
       if (result.success) {
         setReviews(reviews.map(review => 
-          review.id === selectedReview.id ? { ...review, status: ReviewStatus.FLAGGED } : review
+          (review._id === reviewId || review.id === reviewId) ? { ...review, status: ReviewStatus.FLAGGED } : review
         ));
         toast.success("Review flagged successfully");
       } else {
@@ -305,7 +307,7 @@ export default function AdminReviews({ initialReviews }: AdminReviewsProps) {
             </TableHeader>
             <TableBody>
               {filteredReviews.map((review) => (
-                <TableRow key={review.id} className="hover:bg-muted/50">
+                <TableRow key={review._id || review.id} className="hover:bg-muted/50">
                   <TableCell>
                     <div className="max-w-md">
                       <div className="font-medium line-clamp-2">{review.comment}</div>
@@ -365,15 +367,15 @@ export default function AdminReviews({ initialReviews }: AdminReviewsProps) {
                         {review.status === ReviewStatus.PENDING && (
                           <>
                             <DropdownMenuItem 
-                              onClick={() => handleStatusUpdate(review.id, ReviewStatus.APPROVED)}
-                              disabled={loadingId === review.id}
+                              onClick={() => handleStatusUpdate(review._id || review.id, ReviewStatus.APPROVED)}
+                              disabled={loadingId === (review._id || review.id)}
                             >
                               <CheckCircle className="mr-2 h-4 w-4" />
                               Approve
                             </DropdownMenuItem>
                             <DropdownMenuItem 
-                              onClick={() => handleStatusUpdate(review.id, ReviewStatus.REJECTED)}
-                              disabled={loadingId === review.id}
+                              onClick={() => handleStatusUpdate(review._id || review.id, ReviewStatus.REJECTED)}
+                              disabled={loadingId === (review._id || review.id)}
                             >
                               <XCircle className="mr-2 h-4 w-4" />
                               Reject
@@ -438,9 +440,9 @@ export default function AdminReviews({ initialReviews }: AdminReviewsProps) {
             <AlertDialogAction
               onClick={handleDeleteReview}
               className="bg-red-600 hover:bg-red-700"
-              disabled={loadingId === selectedReview?.id}
+              disabled={loadingId === (selectedReview?._id || selectedReview?.id)}
             >
-              {loadingId === selectedReview?.id ? "Deleting..." : "Delete Review"}
+              {loadingId === (selectedReview?._id || selectedReview?.id) ? "Deleting..." : "Delete Review"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -468,9 +470,9 @@ export default function AdminReviews({ initialReviews }: AdminReviewsProps) {
             <AlertDialogAction
               onClick={handleFlagReview}
               className="bg-orange-600 hover:bg-orange-700"
-              disabled={loadingId === selectedReview?.id || !flagReason.trim()}
+              disabled={loadingId === (selectedReview?._id || selectedReview?.id) || !flagReason.trim()}
             >
-              {loadingId === selectedReview?.id ? "Flagging..." : "Flag Review"}
+              {loadingId === (selectedReview?._id || selectedReview?.id) ? "Flagging..." : "Flag Review"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
