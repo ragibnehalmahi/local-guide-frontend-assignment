@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Local Guide Platform - Frontend
 
-## Getting Started
+A modern, responsive web application for connecting travelers with local expertise. Built with Next.js 15, this platform offers a seamless experience for both tourists and guides.
 
-First, run the development server:
+## 🚀 Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [Shadcn UI](https://ui.shadcn.com/) / [Radix UI](https://www.radix-ui.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Form Handling**: [React Hook Form](https://react-hook-form.com/) with [Zod](https://zod.dev/)
+- **State Management**: React Context API
+- **Notifications**: [Sonner](https://sonner.stephanev.com/) / [React Hot Toast](https://react-hot-toast.com/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### For Tourists
+- **Explore Tours**: Search and filter tours by city, category, price, and language.
+- **Tour Details**: view comprehensive tour information in a clean, interactive modal or dedicated page.
+- **Booking System**: Request bookings for specific dates and guest counts.
+- **Personal Dashboard**: Track booking status, history, and manage profile.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### For Guides
+- **Listing Management**: Create, edit, and deactivate tour listings.
+- **Quick View**: Preview listing details directly from the dashboard via a modern popup.
+- **Booking Management**: View and manage incoming booking requests.
+- **Analytics Dashboard**: Monitor earnings, active listings, and reviews.
 
-## Learn More
+## 🛠️ Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
+- Node.js 18+ 
+- NPM / PNPM
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
+1. Clone the repository
+2. Navigate to the frontend directory: `cd local-guide-frontend/my-app`
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Create a `.env.local` file and add your environment variables:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+   ```
+5. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏗️ Project Structure
 
-## Deploy on Vercel
+- `/app`: Next.js App Router pages and layouts.
+- `/components`: Reusable UI and module-specific components.
+- `/context`: Application-wide state (Auth, etc.).
+- `/services`: API integration services.
+- `/types`: TypeScript interfaces and types.
+- `/lib`: Utility functions and configuration.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+Built with ❤️ by the Local Guide Platform Team.
