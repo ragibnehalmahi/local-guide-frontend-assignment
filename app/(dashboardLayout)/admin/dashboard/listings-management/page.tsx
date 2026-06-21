@@ -1,15 +1,20 @@
+// This page is the main hub for managing tour listings in the admin dashboard. It provides an overview of all listings, key statistics, and a detailed table for moderation actions.
+//app/(dashboardLayout)/admin/dashboard/listings-management/page.tsx 
+
 import ManagementPageHeader from "@/components/shared/ManagementPageHeader";
-import ListingsTable from "@/components/modules/Admin/ListingsManagement/ListingsTable";  
+import ListingsTable from "@/components/modules/Admin/ListingsManagement/ListingsTable";
 import { Suspense } from "react";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Filter, TrendingUp, MapPin, Power } from "lucide-react";
-import { getAllListings } from "@/services/admin/admin.service"; 
+import { getAllListings } from "@/services/admin/admin.service";
 
 export const metadata = {
   title: "Manage Listings - Admin Dashboard",
   description: "Moderate and manage tour listings",
 };
+
+export const dynamic = "force-dynamic";
 
 async function getListingsData() {
   try {

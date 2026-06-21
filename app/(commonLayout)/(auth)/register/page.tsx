@@ -1,6 +1,7 @@
+//local-guide-frontend-assignment\local-guide-frontend\my-app\app\(commonLayout)\(auth)\register\page.tsx 
 import RegisterForm from "@/components/RegisterForm";
 
- 
+
 
 export default function RegisterPage() {
   return (

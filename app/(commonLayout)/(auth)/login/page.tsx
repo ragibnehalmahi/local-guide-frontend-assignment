@@ -1,4 +1,4 @@
- 
+//local-guide-frontend/my-app/app/(commonLayout)/(auth)/login/page.tsx 
 import LoginForm from '@/components/LoginForm';
 import Link from 'next/link';
 
@@ -15,7 +15,7 @@ export default function LoginPage() {
             <p className="text-gray-600 mb-6">
               Sign in to discover amazing local experiences or manage your guide services.
             </p>
-            
+
             <div className="space-y-4">
               <div className="flex items-center">
                 <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
@@ -23,14 +23,14 @@ export default function LoginPage() {
                 </div>
                 <span>Discover unique local experiences</span>
               </div>
-              
+
               <div className="flex items-center">
                 <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
                   <span className="text-blue-600">✓</span>
                 </div>
                 <span>Connect with passionate local guides</span>
               </div>
-              
+
               <div className="flex items-center">
                 <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
                   <span className="text-blue-600">✓</span>
@@ -54,7 +54,7 @@ export default function LoginPage() {
 
           {/* Right Column - Form */}
           <div>
-            <LoginForm/>
+            <LoginForm />
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+//local-guide-frontend-assignment\local-guide-frontend\my-app\app\(commonLayout)\(auth)\layout.tsx 
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { getCurrentUser } from '@/services/auth/auth.service';

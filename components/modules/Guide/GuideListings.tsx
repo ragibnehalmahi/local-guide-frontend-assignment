@@ -1,4 +1,4 @@
-// src/components/modules/guide/GuideListings.tsx (আপডেটেড)
+// src/components/modules/guide/GuideListings.tsx 
 "use client";
 
 import { IListing } from "@/types/listing.interface";
@@ -66,24 +66,24 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
     if (!images || images.length === 0) {
       return '/placeholder-image.jpg';
     }
-    
+
     const firstImage = images[0];
-    
+
     // Check if it's a base64 string
     if (firstImage.startsWith('data:image/')) {
       return firstImage; // Base64 image
     }
-    
+
     // Check if it's a Cloudinary URL
     if (firstImage.includes('cloudinary.com') || firstImage.startsWith('http')) {
       return firstImage; // External URL
     }
-    
+
     // Check if it's a local file path
     if (firstImage.startsWith('/')) {
       return firstImage; // Local path
     }
-    
+
     return '/placeholder-image.jpg';
   };
 
@@ -98,7 +98,7 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
       'NIGHTLIFE': 'bg-indigo-100 text-indigo-700',
       'PHOTOGRAPHY': 'bg-cyan-100 text-cyan-700',
     };
-    
+
     return colors[category] || 'bg-gray-100 text-gray-700';
   };
 
@@ -107,20 +107,20 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {listings.map((item) => {
           const firstImageUrl = getFirstImageUrl(item.images);
-          
+
           return (
             <div key={item._id || item.id} className="bg-white border rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
               <div className="h-48 bg-slate-200 relative overflow-hidden">
-                <img 
+                <img
                   src={firstImageUrl}
-                  alt={item.title} 
+                  alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     // Fallback if image fails to load
                     (e.target as HTMLImageElement).src = '/placeholder-image.jpg';
                   }}
                 />
-                
+
                 {/* Image overlay for base64 indicator */}
                 {firstImageUrl.startsWith('data:image/') && (
                   <div className="absolute bottom-2 right-2">
@@ -129,7 +129,7 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
                     </Badge>
                   </div>
                 )}
-                
+
                 <div className="absolute top-4 right-4 flex gap-2">
                   <Badge className={`${getCategoryBadge(item.category)} border-0`}>
                     {item.category}
@@ -138,7 +138,7 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
                     ${item.price}
                   </Badge>
                 </div>
-                
+
                 {!item.active && (
                   <div className="absolute top-4 left-4">
                     <Badge variant="destructive" className="bg-red-500">
@@ -147,17 +147,17 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
                   </div>
                 )}
               </div>
-              
+
               <div className="p-5 space-y-4">
                 <div>
                   <h3 className="font-bold text-slate-800 line-clamp-1">{item.title}</h3>
                   <div className="flex items-center justify-between text-xs text-slate-500 mt-1">
                     <span className="flex items-center gap-1">
-                      <MapPin size={12}/>
+                      <MapPin size={12} />
                       {item.location?.city || 'N/A'}, {item.location?.country || 'N/A'}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Users size={12}/>
+                      <Users size={12} />
                       Max {item.maxGroupSize}
                     </span>
                   </div>
@@ -165,15 +165,15 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
                     {item.description}
                   </p>
                 </div>
-                
+
                 <div className="flex gap-2 pt-4 border-t">
-                  <Link 
-                    href={`/guide/dashboard/listings/edit/${item._id}`} 
+                  <Link
+                    href={`/guide/dashboard/listings/edit/${item._id}`}
                     className="flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors"
                   >
                     <Edit size={14} /> Edit
                   </Link>
-                  
+
                   <Button
                     variant="destructive"
                     size="icon"
@@ -187,7 +187,7 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
                       <Trash2 size={16} />
                     )}
                   </Button>
-                  
+
                   {isMounted && (
                     <Button
                       variant="outline"
@@ -198,7 +198,7 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
                       <Eye size={16} />
                     </Button>
                   )}
-                  
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="icon">
@@ -217,12 +217,12 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
                         Quick View
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href={`/tours/${item._id}`} target="_blank">
+                        {/* <Link href={`/tours/${item._id}`} target="_blank">
                           <Eye className="mr-2 h-4 w-4" />
                           View Public Page
-                        </Link>
+                        </Link> */}
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
                         onClick={() => openDeleteDialog(item)}
                         className="text-red-600"
                       >
@@ -244,7 +244,7 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action will deactivate your listing "{selectedListing?.title}". 
+              This action will deactivate your listing "{selectedListing?.title}".
               This listing will no longer be visible to tourists, but you can reactivate it later.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -262,10 +262,10 @@ export default function GuideListings({ listings }: { listings: IListing[] }) {
       </AlertDialog>
 
       {/* View Details Modal */}
-      <ListingDetailsModal 
-        listing={selectedListing} 
-        isOpen={showViewModal} 
-        onClose={() => setShowViewModal(false)} 
+      <ListingDetailsModal
+        listing={selectedListing}
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
       />
 
       {listings.length === 0 && (

@@ -1,50 +1,53 @@
+//services/admin/admin.service.ts 
 // import { updateBookingStatus } from '@/services/admin/admin.service';
 "use server"
 
-// src/services/admin/admin.service.ts এ এই ফাংশনগুলো যোগ করুন
+
 
 import { serverFetch } from "@/lib/server-fetch";
 import { UserRole } from "@/types/auth.interface";
-import { BookingStatus } from "@/types/booking.interface";
 import { ListingStatus } from "@/types/listing.interface";
 import { ReviewStatus } from "@/types/review.interface";
 import { revalidateTag } from "next/cache";
-import { toast } from "sonner";
 
 // Update User Role
 export async function updateUserRole(userId: string, role: UserRole) {
   try {
     const response = await serverFetch.patch(
-      `/users/${userId}/role`,
+      `/admin/users/${userId}/role`,
       {
         body: JSON.stringify({ role }),
       }
     );
 
     const result = await response.json();
+
     if (result.success) {
-      revalidateTag('admin-users', { expire: 0 });
-      revalidateTag('admin-dashboard', { expire: 0 });
+      revalidateTag("admin-users", { expire: 0 });
+      revalidateTag("admin-dashboard", { expire: 0 });
     }
+
     return result;
   } catch (error: any) {
     console.error("Error updating user role:", error);
-    return { success: false, message: "Failed to update user role" };
+    return {
+      success: false,
+      message: "Failed to update user role",
+    };
   }
 }
+
 
 // Delete User
 export async function deleteUser(userId: string) {
   try {
-    const response = await serverFetch.delete(
-      `/users/${userId}`
-    );
+    const response = await serverFetch.delete(`/admin/users/${userId}`);
 
     const result = await response.json();
 
     if (result.success) {
-      revalidateTag('admin-users', { expire: 0 });
-      revalidateTag('admin-dashboard', { expire: 0 });
+      revalidateTag("admin-users", { expire: 0 });
+      revalidateTag("admin-dashboard", { expire: 0 });
     }
 
     return result;
@@ -215,8 +218,7 @@ export async function deleteReview(reviewId: string) {
 // Get All Users (Admin)
 export async function getAllUsers(queryString?: string) {
   try {
-    const url = `/users${queryString ? `?${queryString}` : ""}`;
-
+    const url = `/admin/users${queryString ? `?${queryString}` : ""}`;
     const response = await serverFetch.get(url, {
       next: {
         tags: ["admin-users"],
@@ -230,7 +232,7 @@ export async function getAllUsers(queryString?: string) {
       return {
         success: false,
         data: [],
-        message: `Server error: ${response.status}`
+        message: `Server error: ${response.status}`,
       };
     }
 
@@ -245,13 +247,14 @@ export async function getAllUsers(queryString?: string) {
   }
 }
 
+
 // Removed toggleFeaturedListing as it's not supported by the backend model
 
 // Update User Status
 export async function updateUserStatus(userId: string, status: string) {
   try {
     const response = await serverFetch.patch(
-      `/users/${userId}/status`,
+      `/admin/users/${userId}/status`,
       {
         body: JSON.stringify({ status }),
       }
@@ -260,8 +263,8 @@ export async function updateUserStatus(userId: string, status: string) {
     const result = await response.json();
 
     if (result.success) {
-      revalidateTag('admin-users', { expire: 0 });
-      revalidateTag('admin-dashboard', { expire: 0 });
+      revalidateTag("admin-users", { expire: 0 });
+      revalidateTag("admin-dashboard", { expire: 0 });
     }
 
     return result;
@@ -274,88 +277,17 @@ export async function updateUserStatus(userId: string, status: string) {
   }
 }
 
-// Get All Listings (Admin)
-// export async function getAllListings(queryString?: string) {
-//   try {
-//     const url = `/admin/listings${queryString ? `?${queryString}` : ""}`;
 
-//     const response = await serverFetch.get(url, {
-//       next: {
-//         tags: ["admin-listings"],
-//         revalidate: 120,
-//       },
-//     });
 
-//     if (!response.ok) {
-//       const text = await response.text();
-//       console.error("Backend error:", text.substring(0, 200));
-//       throw new Error(`Server error: ${response.status}`);
-//     }
 
-//     const result = await response.json();
-//     return result;
-//   } catch (error: any) {
-//     console.error("Error fetching all listings:", error);
-//     return {
-//       success: false,
-//       data: [],
-//       message: "Failed to fetch listings",
-//     };
-//   }
-// }
 export async function getAllListings(queryString?: string) {
-  try {
-    // Add the API base path that matches your backend
-    const url = `/listing/${queryString ? `?${queryString}&includeInactive=true` : "?includeInactive=true"}`;
-
-    const response = await serverFetch.get(url, {
-      next: {
-        tags: ["admin-listings"],
-        revalidate: 120,
-      },
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error("Backend error:", text.substring(0, 200));
-      throw new Error(`Server error: ${response.status}`);
-    }
-
-    const result = await response.json();
-    return result;
-  } catch (error: any) {
-    console.error("Error fetching all listings:", error);
-    return {
-      success: false,
-      data: [],
-      message: "Failed to fetch listings",
-    };
-  }
+  const url = `/admin/listings${queryString ? `?${queryString}` : ""}`;
+  const response = await serverFetch.get(url);
+  const result = await response.json();
+  return result;
 }
-// Admin Delete Listing
-// export async function adminDeleteListing(listingId: string) {
-//   try {
-//     // Use admin-specific endpoint
-//     const response = await serverFetch.delete(
-//       `/listing/${listingId}`  // Separate admin endpoint
-//     );
 
-//     const result = await response.json();
 
-//     if (result.success) {
-//       revalidateTag('admin-listings', { expire: 0 });
-//       revalidateTag('guide-listings', { expire: 0 });  // Also revalidate guide's listings
-//     }
-
-//     return result;
-//   } catch (error: any) {
-//     console.error("Error deleting listing:", error);
-//     return {
-//       success: false,
-//       message: "Failed to delete listing",
-//     };
-//   }
-// }
 /**
  * Delete a listing (Admin)
  */
@@ -407,7 +339,12 @@ export const getAllBookingsForAdmin = async (filters?: any) => {
         if (value) params.append(key, String(value));
       });
     }
-    const response = await serverFetch.get(`/booking/all?${params.toString()}`);
+    const response = await serverFetch.get(`/admin/bookings?${params.toString()}`, {
+      next: {
+        tags: ["admin-bookings"],
+        revalidate: 0,
+      },
+    });
     return await response.json();
   } catch (error: any) {
     console.error("Get bookings error:", error);
@@ -418,13 +355,10 @@ export const getAllBookingsForAdmin = async (filters?: any) => {
 /**
  * Update booking status (Admin only)
  */
-export const updateBookingStatus = async (
-  bookingId: string,
-  status: string
-) => {
+export const updateBookingStatus = async (bookingId: string, status: string) => {
   try {
     const response = await serverFetch.patch(
-      `/booking/admin/${bookingId}/status`,
+      `/admin/bookings/${bookingId}/status`,
       {
         body: JSON.stringify({ status }),
       }
@@ -432,11 +366,10 @@ export const updateBookingStatus = async (
 
     const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.message || "Failed to update booking status");
+    if (result.success) {
+      revalidateTag('admin-bookings', { expire: 0 });
+      revalidateTag('admin-dashboard', { expire: 0 });
     }
-
-    revalidateTag('admin-bookings', { expire: 0 });
     return result;
   } catch (error: any) {
     console.error("Update booking status error:", error);
@@ -450,13 +383,10 @@ export const updateBookingStatus = async (
 /**
  * Update payment status (Admin only)
  */
-export const updatePaymentStatus = async (
-  bookingId: string,
-  paymentStatus: string
-) => {
+export const updatePaymentStatus = async (bookingId: string, paymentStatus: string) => {
   try {
     const response = await serverFetch.patch(
-      `/booking/admin/${bookingId}/payment-status`,
+      `/admin/bookings/${bookingId}/payment-status`,
       {
         body: JSON.stringify({ paymentStatus }),
       }
@@ -464,11 +394,10 @@ export const updatePaymentStatus = async (
 
     const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.message || "Failed to update payment status");
+    if (result.success) {
+      revalidateTag('admin-bookings', { expire: 0 });
+      revalidateTag('admin-dashboard', { expire: 0 });
     }
-
-    revalidateTag('admin-bookings', { expire: 0 });
     return result;
   } catch (error: any) {
     console.error("Update payment status error:", error);
@@ -479,19 +408,19 @@ export const updatePaymentStatus = async (
   }
 };
 
+
 /**
  * Get booking statistics (Admin only)
  */
 export const getBookingStatsForAdmin = async () => {
   try {
-    const response = await serverFetch.get("/booking/stats");
-
+    const response = await serverFetch.get("/admin/bookings/stats", {
+      next: {
+        tags: ["admin-bookings-stats"],
+        revalidate: 60,
+      },
+    });
     const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || "Failed to fetch booking stats");
-    }
-
     return result;
   } catch (error: any) {
     console.error("Get booking stats error:", error);

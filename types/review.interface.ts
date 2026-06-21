@@ -1,3 +1,5 @@
+//app/types/review.interface.ts  
+
 export enum ReviewStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
@@ -43,4 +45,4 @@ export interface ICompletedBooking {
   bookingDate: string;
   totalPrice: number;
   status: string;
-}
+}

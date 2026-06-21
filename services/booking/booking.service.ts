@@ -1,3 +1,5 @@
+//local-guide-frontend/my-app/services/booking/booking.service.ts 
+
 "use server"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverFetch } from "@/lib/server-fetch";
@@ -39,155 +41,20 @@ export async function createBooking(data: IBookingFormData) {
   }
 }
 
-// export async function getMyBookings(queryString?: string) {
-//   try {
-//     const response = await serverFetch.get(
-//       `/booking/my-booking${queryString ? `?${queryString}` : "?sortBy=createdAt&sortOrder=desc"}`,
-//       {
-//         next: {
-//           tags: ["my-booking"],
-//           revalidate: 120,
-//         },
-//       }
-//     );
-    
-//     const result = await response.json();
-//     return result;
-//   } catch (error: any) {
-//     console.error("Error fetching bookings:", error);
-//     return {
-//       success: false,
-//       data: [],
-//       message:
-//         process.env.NODE_ENV === "development"
-//           ? error.message
-//           : "Failed to fetch bookings",
-//     };
-//   }
-// }
-// export async function getMyBookings(queryString?: string) {
-//   try {
-//     const url = `/booking/my-booking${queryString ? `?${queryString}` : "?sortBy=createdAt&sortOrder=desc"}`;
-    
-//     const response = await serverFetch.get(url, {
-//       next: {
-//         tags: ["my-booking"],
-//         revalidate: 120,
-//       },
-//     });
 
-//     // ১. চেক করুন রেসপন্স ঠিক আছে কি না
-//     if (!response.ok) {
-//       const errorContent = await response.text(); // HTML আসলে তা টেক্সট হিসেবে ধরবে
-//       console.error(`Backend Error (${response.status}):`, errorContent);
-//       throw new Error(`Server returned ${response.status}. Path might be wrong.`);
-//     }
 
-//     const result = await response.json();
-//     return result;
 
-//   } catch (error: any) {
-//     console.error("Error fetching bookings:", error);
-//     return {
-//       success: false,
-//       data: [],
-//       message: error.message || "Failed to fetch bookings",
-//     };
-//   }
-// }
-// async getMyBookings(userId: Types.ObjectId, query: any = {}) {
-//     try {
-//       const {
-//         page = 1,
-//         limit = 10,
-//         sortBy = 'createdAt',
-//         sortOrder = 'desc',
-//         status,
-//         search,
-//       } = query;
 
-//       const skip = (page - 1) * limit;
-//       const sortDirection = sortOrder === 'desc' ? -1 : 1;
 
-//       // Build filter
-//       // const filter: any = { tourist:  };
-//  const filter :any ={tourist}
-//       if (status) {
-//         filter.status = status;
-//       }
 
-//       if (search) {
-//         filter.$or = [
-//           { 'listing.title': { $regex: search, $options: 'i' } },
-//           { 'guide.name': { $regex: search, $options: 'i' } },
-//         ];
-//       }
-
-//       // Get bookings with pagination
-//       const bookings = await booking.find(filter)
-//         .populate({
-//           path: 'listing',
-//           select: 'title images price duration',
-//         })
-//         .populate({
-//           path: 'guide',
-//           select: 'name profilePicture email phone',
-//         })
-//         .populate({
-//           path: 'tourist',
-//           select: 'name email',
-//         })
-//         .sort({ [sortBy]: sortDirection })
-//         .skip(skip)
-//         .limit(limit)
-//         .lean();
-
-//       // Get total count for pagination
-//       const total = await bookings.countDocuments(filter);
-
-//       // Calculate pagination info
-//       const totalPages = Math.ceil(total / limit);
-//       const hasNextPage = page < totalPages;
-//       const hasPrevPage = page > 1;
-
-//       return {
-//         success: true,
-//         data: bookings,
-//         pagination: {
-//           page: Number(page),
-//           limit: Number(limit),
-//           total,
-//           totalPages,
-//           hasNextPage,
-//           hasPrevPage,
-//         },
-//       };
-//     } catch (error) {
-//       console.error('Error in getMyBookings:', error);
-//       return {
-//         success: false,
-//         message: error instanceof Error ? error.message : 'Failed to fetch bookings',
-//         data: [],
-//         pagination: {
-//           page: 1,
-//           limit: 10,
-//           total: 0,
-//           totalPages: 0,
-//           hasNextPage: false,
-//           hasPrevPage: false,
-//         },
-//       };
-//     }
-//   }
 export async function getMyBookings(queryString?: string) {
   try {
     const url = `/booking/my-bookings${queryString ? `?${queryString}` : "?sortBy=createdAt&sortOrder=desc"}`;
-    //                        ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-    //                  "my-bookings" (plural, no hyphen)
+
 
     const response = await serverFetch.get(url, {
       next: {
-        tags: ["my-bookings"], // এটাও plural করো consistent হওয়ার জন্য
+        tags: ["my-bookings"],
         revalidate: 120,
       },
     });
@@ -220,7 +87,7 @@ export async function getBookingsForGuide(queryString?: string) {
         },
       }
     );
-    
+
     const result = await response.json();
     return result;
   } catch (error: any) {
@@ -236,44 +103,11 @@ export async function getBookingsForGuide(queryString?: string) {
   }
 }
 
-// export async function getBookingById(bookingId: string) {
-//   try {
-//     const response = await serverFetch.get(
-//       `/booking/${bookingId}`,
-//       {
-//         next: {
-//           tags: [`booking-${bookingId}`, "my-bookings", "guide-bookings"],
-//           revalidate: 180,
-//         },
-//       }
-//     );
-    
-//     const result = await response.json();
-    
-//     if (result.success) {
-//       return {
-//         success: true,
-//         data: result.data,
-//       };
-//     }
 
-//     return {
-//       success: false,
-//       data: null,
-//       message: result.message || "Failed to fetch booking",
-//     };
-//   } catch (error: any) {
-//     console.error("Error fetching booking:", error);
-//     return {
-//       success: false,
-//       data: null,
-//       message:
-//         process.env.NODE_ENV === "development"
-//           ? error.message
-//           : "Failed to fetch booking",
-//     };
-//   }
-// }
+
+
+
+
 export async function getBookingById(bookingId: string) {
   if (!bookingId) {
     return { success: false, message: "Booking ID is required" };
@@ -324,7 +158,7 @@ export async function confirmBooking(bookingId: string) {
       revalidateTag(`booking-${bookingId}`, { expire: 0 });
       revalidateTag('dashboard-meta', { expire: 0 });
     }
-    
+
     return result;
   } catch (error: any) {
     console.error("Error confirming booking:", error);
@@ -358,7 +192,7 @@ export async function declineBooking(bookingId: string) {
       revalidateTag(`booking-${bookingId}`, { expire: 0 });
       revalidateTag('dashboard-meta', { expire: 0 });
     }
-    
+
     return result;
   } catch (error: any) {
     console.error("Error declining booking:", error);
@@ -392,7 +226,7 @@ export async function cancelBooking(bookingId: string) {
       revalidateTag(`booking-${bookingId}`, { expire: 0 });
       revalidateTag('dashboard-meta', { expire: 0 });
     }
-    
+
     return result;
   } catch (error: any) {
     console.error("Error cancelling booking:", error);
@@ -427,7 +261,7 @@ export async function completeBooking(bookingId: string) {
       revalidateTag('dashboard-meta', { expire: 0 });
       revalidateTag('guide-reviews', { expire: 0 });
     }
-    
+
     return result;
   } catch (error: any) {
     console.error("Error completing booking:", error);
@@ -440,11 +274,10 @@ export async function completeBooking(bookingId: string) {
     };
   }
 }
- 
 
- 
- 
 
- 
 
- 
+
+
+
+

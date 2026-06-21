@@ -1,6 +1,8 @@
+//app/types/dashboard.interface.ts  
+
 import { UserRole } from "./auth.interface";
 
- 
+
 
 export interface NavItem {
     title: string;

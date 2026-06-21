@@ -1,3 +1,4 @@
+// local-guide-frontend/my-app/components/modules/Tourist/TouristListingDetail.tsx
 "use client";
 
 import { IListing } from "@/types/listing.interface";
@@ -12,22 +13,64 @@ import { Card, CardContent } from "@/components/ui/card";
 import BookingForm from "./BookingForm";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { addToWishlist, removeFromWishlist } from "@/services/wish/wish.service";
 
 export default function TouristListingDetail({ listing }: { listing: IListing }) {
   const router = useRouter();
+  const { user, updateUser } = useAuth();
   const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const listingId = listing?._id || listing?.id;
+
   useEffect(() => {
-    if (!listing?.id && !listing?._id) return;
-    
-    // Check if listing is in wishlist
-    const checkWishlist = async () => {
-      // Implement wishlist check logic here if needed
-    };
-    checkWishlist();
-  }, [listing?.id, listing?._id]);
+    if (user?.wishlist && listingId) {
+      setIsInWishlist(user.wishlist.includes(listingId));
+    }
+  }, [user, listingId]);
+
+  const handleWishlistToggle = async () => {
+    if (!user) {
+      toast.error("Please login to manage wishlist");
+      return;
+    }
+    if (!listingId) {
+      toast.error("Invalid listing");
+      return;
+    }
+    setWishlistLoading(true);
+    try {
+      if (isInWishlist) {
+        const res = await removeFromWishlist(listingId);
+        if (res.success) {
+          toast.success("Removed from wishlist");
+          const newWishlist = res.data?.wishlist || user.wishlist?.filter(id => id !== listingId) || [];
+          updateUser({ wishlist: newWishlist });
+          setIsInWishlist(false);
+        } else {
+          toast.error(res.message || "Failed to remove");
+        }
+      } else {
+        const res = await addToWishlist(listingId);
+        if (res.success) {
+          toast.success("Added to wishlist");
+          const newWishlist = res.data?.wishlist || [...(user.wishlist || []), listingId];
+          updateUser({ wishlist: newWishlist });
+          setIsInWishlist(true);
+        } else {
+          toast.error(res.message || "Failed to add");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -37,8 +80,8 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
           text: listing?.description || "",
           url: window.location.href,
         });
-      } catch (error) {
-        console.log("Sharing cancelled");
+      } catch {
+        // ignore
       }
     } else {
       navigator.clipboard.writeText(window.location.href);
@@ -58,42 +101,35 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
 
   return (
     <div className="space-y-8">
-      {/* Back Button and Actions */}
       <div className="flex items-center justify-between">
-        <Button
-          variant="ghost"
-          onClick={() => router.back()}
-          className="gap-2"
-        >
+        <Button variant="ghost" onClick={() => router.back()} className="gap-2">
           <ChevronLeft className="h-4 w-4" />
           Back to Listings
         </Button>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleShare}
-          >
+          <Button variant="outline" size="icon" onClick={handleShare}>
             <Share2 className="h-4 w-4" />
           </Button>
           <Button
-            variant={isInWishlist ? "default" : "outline"}
+            variant="outline"
             size="icon"
-            
+            onClick={handleWishlistToggle}
+            disabled={wishlistLoading}
           >
-            <Heart className={`h-4 w-4 ${isInWishlist ? "fill-current" : ""}`} />
+            <Heart className={`h-4 w-4 ${isInWishlist ? "fill-red-500 text-red-500" : ""}`} />
           </Button>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
+        {/* Left column: image & details (same as before) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Image Gallery */}
           <div className="space-y-4">
             <div className="rounded-2xl overflow-hidden h-[400px] bg-gray-100">
-              <img 
-                src={listing.images?.[currentImageIndex] || "/placeholder-image.jpg"} 
-                alt={listing.title || "Tour image"} 
+              <img
+                src={listing.images?.[currentImageIndex] || "/placeholder-image.jpg"}
+                alt={listing.title || "Tour image"}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -103,15 +139,12 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden border-2 ${
-                      currentImageIndex === index 
-                        ? "border-primary" 
-                        : "border-transparent"
-                    }`}
+                    className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden border-2 ${currentImageIndex === index ? "border-primary" : "border-transparent"
+                      }`}
                   >
-                    <img 
-                      src={img} 
-                      alt={`${listing.title || "Tour"} ${index + 1}`} 
+                    <img
+                      src={img}
+                      alt={`${listing.title || "Tour"} ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -120,7 +153,7 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
             )}
           </div>
 
-          {/* Listing Content */}
+          {/* Rest of the content (description, tabs, etc.) – unchanged */}
           <div className="space-y-6">
             <div>
               <div className="flex items-start justify-between mb-4">
@@ -152,39 +185,32 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
                   <p className="text-sm text-muted-foreground">+ taxes & fees</p>
                 </div>
               </div>
-
               <Separator />
             </div>
 
-            {/* Tabs */}
             <Tabs defaultValue="description">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="description">Description</TabsTrigger>
                 <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
                 <TabsTrigger value="guide">Guide</TabsTrigger>
               </TabsList>
-              
               <TabsContent value="description" className="space-y-4 pt-4">
                 <p className="text-muted-foreground leading-relaxed">
                   {listing.description || "No description available."}
                 </p>
               </TabsContent>
-              
               <TabsContent value="itinerary" className="space-y-4 pt-4">
                 <p className="text-muted-foreground">
                   Detailed itinerary will be shared after booking confirmation.
                 </p>
               </TabsContent>
-              
               <TabsContent value="guide" className="space-y-4 pt-4">
                 <Card>
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-4">
                       <Avatar className="h-16 w-16">
                         <AvatarImage src={listing.guide?.profilePicture} />
-                        <AvatarFallback>
-                          {listing.guide?.name?.charAt(0) || "G"}
-                        </AvatarFallback>
+                        <AvatarFallback>{listing.guide?.name?.charAt(0) || "G"}</AvatarFallback>
                       </Avatar>
                       <div>
                         <h3 className="font-bold text-lg">{listing.guide?.name || "Local Guide"}</h3>
@@ -194,9 +220,7 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
                             {listing.languages?.join(", ") || "English"}
                           </Badge>
                           {listing.guide?.rating && (
-                            <Badge variant="secondary">
-                              ★ {listing.guide.rating.toFixed(1)}
-                            </Badge>
+                            <Badge variant="secondary">★ {listing.guide.rating.toFixed(1)}</Badge>
                           )}
                         </div>
                       </div>
@@ -206,7 +230,6 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
               </TabsContent>
             </Tabs>
 
-            {/* What's Included */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">What's Included</h3>
               <div className="grid gap-3">
@@ -230,15 +253,12 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
             </div>
           </div>
         </div>
-        
-        {/* Booking Sidebar */}
+
+        {/* Booking Sidebar – unchanged */}
         <div className="lg:col-span-1">
           <div className="sticky top-8">
             {showBookingForm ? (
-              <BookingForm 
-                listing={listing} 
-                onSuccess={() => setShowBookingForm(false)}
-              />
+              <BookingForm listing={listing} onSuccess={() => setShowBookingForm(false)} />
             ) : (
               <Card>
                 <CardContent className="pt-6 space-y-6">
@@ -258,33 +278,20 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
                       • Mobile ticket
                     </div>
                   </div>
-
-                  <Button
-                    onClick={() => setShowBookingForm(true)}
-                    className="w-full"
-                    size="lg"
-                  >
+                  <Button onClick={() => setShowBookingForm(true)} className="w-full" size="lg">
                     Book Now
                   </Button>
-
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground">
-                      You won't be charged yet
-                    </p>
+                    <p className="text-sm text-muted-foreground">You won't be charged yet</p>
                   </div>
-
                   <Separator />
-
                   <div className="space-y-3">
                     <h4 className="font-semibold">Available Dates</h4>
                     <div className="flex flex-wrap gap-2">
                       {listing.availableDates && listing.availableDates.length > 0 ? (
                         listing.availableDates.slice(0, 3).map((date, index) => (
                           <Badge key={index} variant="outline" className="text-xs">
-                            {new Date(date).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric'
-                            })}
+                            {new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </Badge>
                         ))
                       ) : (
@@ -306,3 +313,4 @@ export default function TouristListingDetail({ listing }: { listing: IListing })
     </div>
   );
 }
+

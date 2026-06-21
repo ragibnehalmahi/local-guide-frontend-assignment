@@ -1,3 +1,5 @@
+//local-guide-frontend-assignment\local-guide-frontend\my-app\app\(commonLayout)\tours\[id]\page.tsx 
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -22,7 +24,7 @@ export default function TourDetailsPage() {
 
   const [tour, setTour] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  
+
   // Booking state
   const [date, setDate] = useState("");
   const [guestCount, setGuestCount] = useState(1);
@@ -59,14 +61,14 @@ export default function TourDetailsPage() {
       toast.error("Please select a date");
       return;
     }
-    
+
     // Check auth token (assume it's in localStorage or cookie depending on auth-client)
     // For simplicity, we just send request. Axios interceptor or backend should handle Auth.
     setBookingLoading(true);
     try {
       // Typically need auth token. 
       const token = localStorage.getItem("accessToken");
-      
+
       const payload = {
         listingId: tour._id,
         date: new Date(date).toISOString(),
@@ -78,8 +80,8 @@ export default function TourDetailsPage() {
           Authorization: `Bearer ${token}`
         }
       });
-      
-      if(res.data.success) {
+
+      if (res.data.success) {
         toast.success("Booking request sent successfully!");
         router.push("/tourist/dashboard"); // Redirect to tourist dashboard
       }
@@ -144,11 +146,11 @@ export default function TourDetailsPage() {
           {/* Image Gallery */}
           <div className="rounded-xl overflow-hidden aspect-video relative bg-slate-100 border border-slate-200 shadow-sm">
             {tour.images && tour.images.length > 0 ? (
-              <Image 
-                src={tour.images[0]} 
-                alt={tour.title} 
-                fill 
-                className="object-cover" 
+              <Image
+                src={tour.images[0]}
+                alt={tour.title}
+                fill
+                className="object-cover"
                 unoptimized
               />
             ) : (
@@ -224,11 +226,10 @@ export default function TourDetailsPage() {
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star
                       key={s}
-                      className={`w-3 h-3 ${
-                        s <= Math.round(tour.rating || 0)
+                      className={`w-3 h-3 ${s <= Math.round(tour.rating || 0)
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-slate-200"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -266,11 +267,10 @@ export default function TourDetailsPage() {
                             {[1, 2, 3, 4, 5].map((s) => (
                               <Star
                                 key={s}
-                                className={`w-3.5 h-3.5 ${
-                                  s <= review.rating
+                                className={`w-3.5 h-3.5 ${s <= review.rating
                                     ? "fill-yellow-400 text-yellow-400"
                                     : "text-slate-200 fill-slate-200"
-                                }`}
+                                  }`}
                               />
                             ))}
                           </div>
@@ -297,7 +297,7 @@ export default function TourDetailsPage() {
               </div>
               <p className="text-sm text-slate-400">Secure your spot today.</p>
             </div>
-            
+
             <CardContent className="p-6">
               <form onSubmit={handleBooking} className="space-y-5">
                 <div className="space-y-2">
@@ -305,27 +305,27 @@ export default function TourDetailsPage() {
                     <CalendarIcon className="w-4 h-4 mr-2 text-slate-400" />
                     Select Date
                   </label>
-                  <Input 
-                    type="date" 
-                    required 
-                    value={date} 
+                  <Input
+                    type="date"
+                    required
+                    value={date}
                     onChange={(e) => setDate(e.target.value)}
                     min={new Date().toISOString().split('T')[0]}
                     className="cursor-pointer"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-sm font-semibold flex items-center text-slate-700">
                     <Users className="w-4 h-4 mr-2 text-slate-400" />
                     Number of Guests
                   </label>
-                  <Input 
-                    type="number" 
-                    required 
-                    min={1} 
+                  <Input
+                    type="number"
+                    required
+                    min={1}
                     max={tour.maxGroupSize || 20}
-                    value={guestCount} 
+                    value={guestCount}
                     onChange={(e) => setGuestCount(Number(e.target.value))}
                   />
                 </div>
@@ -341,9 +341,9 @@ export default function TourDetailsPage() {
                   </div>
                 </div>
 
-                <Button 
-                  type="submit" 
-                  disabled={bookingLoading} 
+                <Button
+                  type="submit"
+                  disabled={bookingLoading}
                   className="w-full mt-2 bg-blue-600 hover:bg-blue-700 h-12 text-base shadow-md transition-all active:scale-[0.98]"
                 >
                   {bookingLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}

@@ -1,3 +1,5 @@
+//my-app/components/RegisterForm.tsx      
+
 'use client';
 
 import { registerUser } from '@/services/auth/auth.service';
@@ -57,7 +59,7 @@ const RegisterForm = () => {
             <FieldLabel>Register as a:</FieldLabel>
             <div className="grid grid-cols-2 gap-3 mt-2">
               <input type="hidden" name="role" value={selectedRole} />
-              
+
               <Button
                 type="button"
                 variant={selectedRole === 'tourist' ? 'default' : 'outline'}

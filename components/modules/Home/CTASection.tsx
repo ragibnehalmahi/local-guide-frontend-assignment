@@ -1,3 +1,5 @@
+// src/components/modules/Home/CTASection.tsx   
+
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -8,28 +10,28 @@ export default function CTASection() {
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Ready for Your Next Adventure?
         </h2>
-        
+
         <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
           Join thousands of travelers who have discovered hidden gems with local guides
         </p>
-        
+
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link 
+          <Link
             href="/explore"
             className="inline-flex items-center justify-center gap-2 bg-white text-blue-600 hover:bg-blue-50 font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 hover:scale-105"
           >
             Explore Tours
             <ArrowRight className="w-5 h-5" />
           </Link>
-          
-          <Link 
+
+          <Link
             href="/become-a-guide"
             className="inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-white/10 font-bold py-4 px-8 rounded-full text-lg transition-all duration-300"
           >
             Become a Guide
           </Link>
         </div>
-        
+
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div>
             <div className="text-4xl font-bold mb-2">500+</div>

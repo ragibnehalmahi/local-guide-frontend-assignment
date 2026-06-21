@@ -1,67 +1,15 @@
-// export enum UserRole {
-//   ADMIN = 'admin',
-//   TOURIST = 'tourist',
-//   GUIDE = 'guide',
-// }
 
-// export enum UserStatus {
-//   ACTIVE = 'ACTIVE',
-//   INACTIVE = 'INACTIVE',
-//   BLOCKED = 'BLOCKED',
-//   DELETED = 'DELETED',
-// }
-
-// export interface IUserLocation {
-//   addressLine1: string;
-//   addressLine2?: string;
-//   city: string;
-//   state?: string;
-//   postalCode?: string;
-//   country?: string;
-//   coordinates?: {
-//     lat: number;
-//     lng: number;
-//   };
-// }
-
-// export interface IUser {
-//   _id: string;
-//   name: string;
-//   email: string;
-//   phone?: string;
-//   profilePicture?: string;
-//   bio?: string;
-//   languages: string[];
-//   role: UserRole;
-//   status: UserStatus;
-//   isVerified: boolean;
-  
-//   // Guide-specific fields
-//   expertise?: string[];
-//   dailyRate?: number;
-//   rating?: number;
-//   totalReviews?: number;
-//   yearsOfExperience?: number;
-//   availableDates?: Date[];
-  
-//   // Tourist-specific fields
-//   travelPreferences?: string[];
-//   wishlist?: string[];
-  
-//   location?: IUserLocation;
-//   createdAt: Date;
-//   updatedAt: Date;
-// }
+//local-guide-frontend/my-app/types/user.interface.ts   
 export interface UserInfo {
-  id:string;
-    name: string;
-    email: string;
-    role: UserRole;
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
 }
 export enum UserRole {
   admin = "admin",
   tourist = "tourist",
-  guide= "guide"
+  guide = "guide"
 }
 
 export enum UserStatus {
@@ -94,7 +42,7 @@ export interface IUser {
   languages: string[];
   role: UserRole;
   status: UserStatus;
-  
+
   // Guide-specific
   expertise?: string[];
   dailyRate?: number;
@@ -102,11 +50,11 @@ export interface IUser {
   totalReviews?: number;
   yearsOfExperience?: number;
   availableDates?: Date[];
-  
+
   // Tourist-specific
   travelPreferences?: string[];
   wishlist?: string[];
-  
+
   location?: IUserLocation;
   createdAt: string;
   updatedAt: string;

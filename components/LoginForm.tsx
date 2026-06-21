@@ -1,3 +1,5 @@
+//my-app/components/LoginForm.tsx     
+
 'use client';
 
 import { useState } from 'react';
@@ -28,7 +30,7 @@ export default function LoginForm() {
     form.append('redirect', redirect);
 
     const result = await loginUser(form);
-    
+
     if (result.success === false) {
       setError(result.message || 'Login failed');
       setLoading(false);
@@ -39,7 +41,7 @@ export default function LoginForm() {
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
       <h2 className="text-2xl font-bold text-center mb-6">Login to LocalGuide</h2>
-      
+
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
           {error}
@@ -78,7 +80,7 @@ export default function LoginForm() {
             <input type="checkbox" className="mr-2" />
             <span className="text-sm">Remember me</span>
           </label>
-          
+
           <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
             Forgot password?
           </Link>

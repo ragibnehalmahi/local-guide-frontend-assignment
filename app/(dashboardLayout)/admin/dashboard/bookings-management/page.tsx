@@ -1,15 +1,20 @@
+// This page is the main hub for managing bookings in the admin dashboard. It provides an overview of all bookings, key statistics, and a detailed table for monitoring and moderation actions.
+//app/(dashboardLayout)/admin/dashboard/bookings-management/page.tsx  
+
 import ManagementPageHeader from "@/components/shared/ManagementPageHeader";
-import BookingsTable from "@/components/modules/Admin/BookingsManagement/BookingsTable";  
+import BookingsTable from "@/components/modules/Admin/BookingsManagement/BookingsTable";
 import { Suspense } from "react";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Filter, TrendingUp, Download } from "lucide-react";
-import { getAllBookingsForAdmin } from "@/services/admin/admin.service";  
+import { getAllBookingsForAdmin } from "@/services/admin/admin.service";
 
 export const metadata = {
   title: "Manage Bookings - Admin Dashboard",
   description: "View and monitor all bookings on the platform",
 };
+
+export const dynamic = "force-dynamic";
 
 async function getBookingsData() {
   try {
@@ -29,11 +34,11 @@ export default async function BookingsManagementPage() {
 
   // Calculate stats
   const revenue = bookings
-    .filter((b:any) => b.status?.toUpperCase() === 'COMPLETED' || b.paymentStatus?.toUpperCase() === 'PAID')
+    .filter((b: any) => b.status?.toUpperCase() === 'COMPLETED' || b.paymentStatus?.toUpperCase() === 'PAID')
     .reduce((sum: number, booking: any) => sum + (booking.totalAmount || 0), 0);
-  
-  const completedBookings = bookings.filter((b:any) => b.status?.toUpperCase() === 'COMPLETED').length;
-  const pendingBookings = bookings.filter((b:any) => b.status?.toUpperCase() === 'PENDING').length;
+
+  const completedBookings = bookings.filter((b: any) => b.status?.toUpperCase() === 'COMPLETED').length;
+  const pendingBookings = bookings.filter((b: any) => b.status?.toUpperCase() === 'PENDING').length;
 
   return (
     <div className="space-y-6">
@@ -114,9 +119,9 @@ export default async function BookingsManagementPage() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'].map(status => {
-            const count = bookings.filter((b:any) => (b.status || "").toUpperCase() === status).length;
+            const count = bookings.filter((b: any) => (b.status || "").toUpperCase() === status).length;
             const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
-            
+
             const statusColors: Record<string, string> = {
               PENDING: 'bg-yellow-100 text-yellow-800',
               CONFIRMED: 'bg-blue-100 text-blue-800',
@@ -137,12 +142,11 @@ export default async function BookingsManagementPage() {
                   <span className="text-[10px] text-gray-500 uppercase font-bold tracking-tight mb-1">Bookings</span>
                 </div>
                 <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full ${
-                      status === 'PENDING' ? 'bg-yellow-400' :
-                      status === 'CONFIRMED' ? 'bg-blue-400' :
-                      status === 'COMPLETED' ? 'bg-green-400' : 'bg-red-400'
-                    }`}
+                  <div
+                    className={`h-full ${status === 'PENDING' ? 'bg-yellow-400' :
+                        status === 'CONFIRMED' ? 'bg-blue-400' :
+                          status === 'COMPLETED' ? 'bg-green-400' : 'bg-red-400'
+                      }`}
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
@@ -159,4 +163,4 @@ export default async function BookingsManagementPage() {
     </div>
   );
 }
-
+

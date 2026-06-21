@@ -1,3 +1,5 @@
+// src/components/modules/Home/HowItWorks.tsx     
+
 import { Search, Calendar, Users, Star } from 'lucide-react';
 
 const steps = [
@@ -35,7 +37,7 @@ export default function HowItWorks() {
             Get started in just 4 simple steps
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
             <div key={index} className="text-center">

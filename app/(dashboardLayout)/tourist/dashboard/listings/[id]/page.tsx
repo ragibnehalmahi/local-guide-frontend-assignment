@@ -1,5 +1,7 @@
-import TouristListingDetail from "@/components/modules/Tourist/TouristListingDetail";  
-import { getListingById } from "@/services/listing/listing.service";  
+//app/(dashboardLayout)/tourist/dashboard/listings/[id]/page.tsx
+
+import TouristListingDetail from "@/components/modules/Tourist/TouristListingDetail";
+import { getListingById } from "@/services/listing/listing.service";
 import { notFound } from "next/navigation";
 
 interface ListingDetailPageProps {
@@ -19,4 +21,3 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
 
 
 
- 

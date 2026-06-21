@@ -1,5 +1,5 @@
- 
 
+//local-guide-frontend\my-app\app\(dashboardLayout)\tourist\dashboard\page.tsx
 
 import { DashboardSkeleton } from "@/components/shared/DashboardSkeleton";
 import { StatsCard } from "@/components/shared/StatCard";
@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 async function TouristDashboardContent() {
   try {
     const result = await getTouristDashboardMetaData();
-    
+
     if (!result.success) {
       throw new Error(result.message || "Failed to fetch dashboard data");
     }
@@ -73,14 +73,14 @@ async function TouristDashboardContent() {
         <div className="bg-white rounded-lg border p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Recent Bookings</h3>
-            <Link 
-              href="/tourist/dashboard/bookings" 
+            <Link
+              href="/tourist/dashboard/bookings"
               className="text-sm text-primary hover:underline"
             >
               View all
             </Link>
           </div>
-          
+
           {!data.recentBookings || data.recentBookings.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               No recent bookings. Start exploring tours!
@@ -88,18 +88,17 @@ async function TouristDashboardContent() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {data.recentBookings.map((booking: any) => (
-                <Link 
+                <Link
                   key={booking._id}
                   href={`/tourist/dashboard/bookings/${booking._id}`}
                   className="group block border rounded-xl overflow-hidden hover:shadow-md transition bg-gray-50/50"
                 >
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                       <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                        booking.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
-                        booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-blue-50 text-blue-700'
-                      }`}>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${booking.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                          booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-blue-50 text-blue-700'
+                        }`}>
                         {booking.status}
                       </span>
                       <p className="text-xs font-bold text-primary">${booking.totalPrice}</p>
@@ -112,7 +111,7 @@ async function TouristDashboardContent() {
                       {new Date(booking.date).toLocaleDateString()}
                     </p>
                     <div className="mt-3 pt-3 border-t flex items-center justify-between">
-                     <p className="text-[10px] text-muted-foreground italic">
+                      <p className="text-[10px] text-muted-foreground italic">
                         Guide: {booking.guide?.name || "Local Expert"}
                       </p>
                       <ArrowRight className="h-3 w-3 text-primary" />
@@ -136,7 +135,7 @@ async function TouristDashboardContent() {
               Browse Tours
             </Link>
           </div>
-          
+
           <div className="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg p-6">
             <h4 className="font-semibold text-green-800 mb-2">My Bookings</h4>
             <p className="text-sm text-green-700 mb-3">Manage your upcoming tours</p>
@@ -147,7 +146,7 @@ async function TouristDashboardContent() {
               View Bookings
             </Link>
           </div>
-          
+
           <div className="bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-6">
             <h4 className="font-semibold text-purple-800 mb-2">My Wishlist</h4>
             <p className="text-sm text-purple-700 mb-3">Tours you've saved for later</p>
@@ -163,7 +162,7 @@ async function TouristDashboardContent() {
     );
   } catch (error: any) {
     console.error("Error in TouristDashboardContent:", error);
-    
+
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-6">
         <div className="flex items-center gap-3 mb-4">
@@ -207,4 +206,3 @@ export default TouristDashboardPage;
 
 
 
- 

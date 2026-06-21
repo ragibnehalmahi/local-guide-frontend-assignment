@@ -1,9 +1,9 @@
- 
 
+//local-guide-frontend/my-app/lib/navItems.config.ts    
 import { getMyBookings } from "@/services/booking/booking.service";
-import { IBooking } from "@/types/booking.interface";  
+import { IBooking } from "@/types/booking.interface";
 import { NavSection } from "@/types/dashboard.interface";
-import { getDefaultDashboardRoute } from "./auth-utils"; 
+import { getDefaultDashboardRoute } from "./auth-utils";
 import { UserRole } from "@/types/auth.interface";
 import { User } from "lucide-react";
 
@@ -53,7 +53,7 @@ const getUpcomingBookingsCount = async (status: string): Promise<string | undefi
     try {
         const response = await getMyBookings(`status=${status}`);
         const now = new Date();
-        
+
         // তারিখ চেক করার সময় ঐচ্ছিক চেইনিং (?.) এবং ডিফল্ট ভ্যালু ব্যবহার করা হয়েছে
         const futureBookings = response?.data?.filter((booking: IBooking) => {
             const tourDate = booking?.date ? new Date(booking.date) : null;
@@ -94,7 +94,7 @@ export const getGuideNavItems = async (): Promise<NavSection[]> => {
                     icon: "Star",
                     roles: ["guide"],
                 },
-                 {
+                {
                     title: "Create a Tour",
                     href: "/guide/dashboard/listings/create",
                     icon: "Star",
@@ -150,7 +150,7 @@ export const getGuideNavItems = async (): Promise<NavSection[]> => {
 export const getTouristNavItems = async (): Promise<NavSection[]> => {
     // Upcoming বুকিং এর সংখ্যা আনার জন্য (বুকিং ট্যাবে ব্যাজ দেখানোর জন্য)
     const upcomingCount = await getUpcomingBookingsCount("CONFIRMED");
-  
+
 
     return [
         // {
@@ -179,7 +179,7 @@ export const getTouristNavItems = async (): Promise<NavSection[]> => {
                     href: "/tourist/dashboard/listings",
                     icon: "Map",
                     roles: ["tourist"],
-                },{
+                }, {
                     title: "Bookings",
                     href: "/tourist/dashboard/bookings",
                     icon: "Map",
@@ -191,7 +191,7 @@ export const getTouristNavItems = async (): Promise<NavSection[]> => {
                     icon: "Heart",
                     roles: ["tourist"],
                 },
-                
+
             ],
         },
         {
@@ -209,7 +209,7 @@ export const getTouristNavItems = async (): Promise<NavSection[]> => {
                     icon: "CreditCard",
                     roles: ["tourist"],
                 },
-                
+
             ],
         },
         {
@@ -236,7 +236,7 @@ export const adminNavItems: NavSection[] = [
     {
         title: "User Management",
         items: [
-      
+
             {
                 title: "Users",
                 href: "/admin/dashboard/users-management",
@@ -247,20 +247,20 @@ export const adminNavItems: NavSection[] = [
     },
     {
         title: "Tour Management",
-        items: [   {
-                title: "LISTINGS MANAGEMENT",
-                href: "/admin/dashboard/listings-management",
-                icon: "Globe",
-                roles: ["admin"],
-            },
-           
-            {
-                title: "BOOKINGS MANAGEMENT",
-                href: "/admin/dashboard/bookings-management",
-                icon: "Calendar",
-                roles: ["admin"],
-            },
-         
+        items: [{
+            title: "LISTINGS MANAGEMENT",
+            href: "/admin/dashboard/listings-management",
+            icon: "Globe",
+            roles: ["admin"],
+        },
+
+        {
+            title: "BOOKINGS MANAGEMENT",
+            href: "/admin/dashboard/bookings-management",
+            icon: "Calendar",
+            roles: ["admin"],
+        },
+
         ],
     }
 ];
@@ -283,4 +283,3 @@ export const getNavItemsByRole = async (role: UserRole): Promise<NavSection[]> =
 
 
 
- 

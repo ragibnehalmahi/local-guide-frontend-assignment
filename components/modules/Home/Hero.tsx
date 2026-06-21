@@ -1,3 +1,5 @@
+//src/components/modules/Home/Hero.tsx  
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +25,7 @@ export default function Hero() {
           Discover Authentic Experiences with{" "}
           <span className="text-blue-600">Local Guides</span>
         </h1>
-        
+
         <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
           Connect with passionate locals who will show you the hidden gems,
           culture, and stories of their city. Travel like a local, not a tourist.

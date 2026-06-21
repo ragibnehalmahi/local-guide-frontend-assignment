@@ -1,3 +1,5 @@
+// src/components/shared/PublicFooter.tsx 
+
 import Link from 'next/link';
 import { Globe, Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 
@@ -64,13 +66,13 @@ export default function PublicFooter() {
                 <p className="text-cyan-300 font-semibold">.bd</p>
               </div>
             </div>
-            
+
             <p className="text-gray-300 mb-6 max-w-md">
-              Connecting travelers with passionate local guides for authentic experiences 
-              across Bangladesh. Discover hidden gems, taste local flavors, and create 
+              Connecting travelers with passionate local guides for authentic experiences
+              across Bangladesh. Discover hidden gems, taste local flavors, and create
               unforgettable memories.
             </p>
-            
+
             {/* Contact Info */}
             <div className="space-y-3">
               {contactInfo.map((item, index) => (
@@ -80,7 +82,7 @@ export default function PublicFooter() {
                 </div>
               ))}
             </div>
-            
+
             {/* Social Links */}
             <div className="flex space-x-4 mt-6">
               {socialLinks.map((social) => (
@@ -150,7 +152,7 @@ export default function PublicFooter() {
             <div className="text-gray-400 text-sm">
               © {currentYear} LocalGuide.bd. All rights reserved.
             </div>
-            
+
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
                 Privacy Policy
@@ -168,12 +170,12 @@ export default function PublicFooter() {
                 FAQ
               </Link>
             </div>
-            
+
             <div className="flex items-center space-x-2 text-sm text-gray-400">
               <span>Made with ❤️ in Bangladesh</span>
             </div>
           </div>
-          
+
           {/* Trust Badges */}
           <div className="mt-6 pt-6 border-t border-gray-800 flex flex-wrap justify-center gap-6">
             <div className="text-center">

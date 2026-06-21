@@ -1,5 +1,6 @@
-import TouristBookingDetails from "@/components/modules/Tourist/TouristBookingDetails";  
-import { getBookingById } from "@/services/booking/booking.service";  
+//app/(dashboardLayout)/tourist/dashboard/bookings/[id]/page.tsx
+import TouristBookingDetails from "@/components/modules/Tourist/TouristBookingDetails";
+import { getBookingById } from "@/services/booking/booking.service";
 import { notFound } from "next/navigation";
 
 interface BookingDetailPageProps {
@@ -14,7 +15,6 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
     notFound();
   }
 
-  return <TouristBookingDetails booking={bookingResult.data}  />;
+  return <TouristBookingDetails booking={bookingResult.data} />;
 }
 
- 

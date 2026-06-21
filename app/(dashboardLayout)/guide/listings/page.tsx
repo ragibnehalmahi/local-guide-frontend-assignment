@@ -1,3 +1,4 @@
+//app/(dashboardLayout)/guide/listings/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -23,7 +24,7 @@ export default function GuideListingsPage() {
       // or we just fetch all and filter client side if no specific endpoint.
       // Assuming GET /listings with auth token or a dedicated /my-listings endpoint.
       // Here using /listings maybe backend filters it if we use token, or we append ?guideId=xyz
-      
+
       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/listings`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -77,7 +78,7 @@ export default function GuideListingsPage() {
             <Card key={item._id} className="overflow-hidden hover:shadow-md transition-shadow">
               <div className="h-40 bg-slate-100 relative">
                 {item.images && item.images.length > 0 ? (
-                  <Image src={item.images[0]} alt={item.title} fill className="object-cover" unoptimized/>
+                  <Image src={item.images[0]} alt={item.title} fill className="object-cover" unoptimized />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">No Image</div>
                 )}

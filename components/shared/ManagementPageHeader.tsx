@@ -1,3 +1,5 @@
+//app/components/shared/ManagementPageHeader.tsx  
+
 interface ManagementPageHeaderProps {
   title: string;
   description?: string;
@@ -17,7 +19,7 @@ export default function ManagementPageHeader({
           <p className="text-gray-500 mt-1">{description}</p>
         )}
       </div>
-      
+
       {actions && (
         <div className="flex items-center gap-2">
           {actions}

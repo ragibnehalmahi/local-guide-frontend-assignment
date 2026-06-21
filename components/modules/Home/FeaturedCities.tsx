@@ -1,3 +1,5 @@
+// src/components/modules/Home/FeaturedCities.tsx     
+
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 
@@ -22,16 +24,16 @@ export default function FeaturedCities() {
             Discover amazing experiences in Bangladesh's most vibrant cities
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cities.map((city, index) => (
-            <Link 
-              href={`/explore?city=${city.name.toLowerCase()}`} 
+            <Link
+              href={`/explore?city=${city.name.toLowerCase()}`}
               key={index}
               className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative h-64">
-                <div 
+                <div
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                   style={{ backgroundImage: `url(${city.image})` }}
                 />

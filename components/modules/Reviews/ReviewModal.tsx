@@ -1,3 +1,5 @@
+//components/modules/Reviews/ReviewModal.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -93,11 +95,10 @@ export default function ReviewModal({
                   onMouseLeave={() => setHover(0)}
                 >
                   <Star
-                    className={`w-10 h-10 transition-colors ${
-                      star <= (hover || rating)
+                    className={`w-10 h-10 transition-colors ${star <= (hover || rating)
                         ? "fill-yellow-400 text-yellow-400"
                         : "text-slate-200 fill-slate-50"
-                    }`}
+                      }`}
                   />
                 </button>
               ))}

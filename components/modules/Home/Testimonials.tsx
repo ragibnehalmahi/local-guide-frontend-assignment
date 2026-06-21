@@ -1,3 +1,5 @@
+// src/components/modules/Home/Testimonials.tsx     
+
 import { Star, Quote } from 'lucide-react';
 
 const testimonials = [
@@ -36,19 +38,19 @@ export default function Testimonials() {
             See what our travelers say about their experiences
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="relative bg-gradient-to-br from-white to-blue-50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
               <Quote className="absolute top-4 right-4 w-12 h-12 text-blue-100" />
-              
+
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-14 h-14 rounded-full overflow-hidden border-4 border-white shadow">
-                  <img 
-                    src={testimonial.image} 
+                  <img
+                    src={testimonial.image}
                     alt={testimonial.name}
                     className="w-full h-full object-cover"
                   />
@@ -58,13 +60,13 @@ export default function Testimonials() {
                   <p className="text-sm text-gray-600">{testimonial.location}</p>
                 </div>
               </div>
-              
+
               <div className="flex mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
                 ))}
               </div>
-              
+
               <p className="text-gray-700 italic">"{testimonial.text}"</p>
             </div>
           ))}

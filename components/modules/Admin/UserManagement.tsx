@@ -1,14 +1,16 @@
+//app/components/modules/Admin/UserManagement.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  Search, 
-  User, 
-  Mail, 
-  Shield, 
-  CheckCircle, 
-  XCircle, 
-  MoreVertical, 
+import {
+  Search,
+  User,
+  Mail,
+  Shield,
+  CheckCircle,
+  XCircle,
+  MoreVertical,
   ExternalLink,
   Trash2,
   AlertTriangle
@@ -17,12 +19,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "@/components/ui/select";
 import {
   DropdownMenu,
@@ -43,11 +45,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { 
-  getAllUsers, 
-  updateUserStatus, 
+import {
+  getAllUsers,
+  updateUserStatus,
   updateUserRole,
-  deleteUser 
+  deleteUser
 } from "@/services/admin/admin.service";
 import { UserRole } from "@/types/auth.interface";
 
@@ -124,7 +126,7 @@ export default function UserManagement() {
 
   const handleDeleteConfirm = async () => {
     if (!userToDelete) return;
-    
+
     try {
       setActionLoading(userToDelete._id);
       const result = await deleteUser(userToDelete._id);
@@ -240,8 +242,8 @@ export default function UserManagement() {
                           <ExternalLink className="h-4 w-4" /> View Public Profile
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="my-2" />
-                        <DropdownMenuItem 
-                          className="rounded-xl font-bold text-xs gap-2 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer" 
+                        <DropdownMenuItem
+                          className="rounded-xl font-bold text-xs gap-2 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer"
                           onClick={() => setUserToDelete(user)}
                         >
                           <Trash2 className="h-4 w-4" /> Terminate Account
@@ -255,7 +257,7 @@ export default function UserManagement() {
                     <div className="flex flex-col gap-1.5 p-3 rounded-2xl bg-gray-50 border border-gray-100/50">
                       <span className="text-[10px] uppercase font-black tracking-widest text-gray-400">Vault Access</span>
                       <Badge variant="outline" className={`${getRoleColor(user.role)} font-black text-[10px] border-none shadow-none uppercase h-5`}>
-                         {user.role}
+                        {user.role}
                       </Badge>
                     </div>
                     <div className="flex flex-col gap-1.5 p-3 rounded-2xl bg-gray-50 border border-gray-100/50">
@@ -269,23 +271,23 @@ export default function UserManagement() {
                   {/* Management Controls */}
                   <div className="space-y-4 pt-2">
                     <div className="space-y-2">
-                       <label className="text-[10px] uppercase font-black text-gray-400 tracking-widest ml-1 flex items-center gap-1.5">
-                         <Shield className="h-3 w-3" /> Privileges Modification
-                       </label>
-                       <Select
-                         disabled={actionLoading === user._id}
-                         onValueChange={(value) => handleRoleUpdate(user._id, value as UserRole)}
-                         defaultValue={user.role}
-                       >
-                         <SelectTrigger className="w-full h-12 bg-white border-gray-100 rounded-xl font-bold text-xs shadow-sm hover:border-primary/30 transition-all">
-                           <SelectValue placeholder="Override Role" />
-                         </SelectTrigger>
-                         <SelectContent className="rounded-xl border-gray-100">
-                           <SelectItem value="tourist" className="font-bold text-xs rounded-lg">PROVISION TOURIST</SelectItem>
-                           <SelectItem value="guide" className="font-bold text-xs rounded-lg">ELEVATE TO GUIDE</SelectItem>
-                           <SelectItem value="admin" className="font-bold text-xs rounded-lg">PLATFORM ADMINISTRATOR</SelectItem>
-                         </SelectContent>
-                       </Select>
+                      <label className="text-[10px] uppercase font-black text-gray-400 tracking-widest ml-1 flex items-center gap-1.5">
+                        <Shield className="h-3 w-3" /> Privileges Modification
+                      </label>
+                      <Select
+                        disabled={actionLoading === user._id}
+                        onValueChange={(value) => handleRoleUpdate(user._id, value as UserRole)}
+                        defaultValue={user.role}
+                      >
+                        <SelectTrigger className="w-full h-12 bg-white border-gray-100 rounded-xl font-bold text-xs shadow-sm hover:border-primary/30 transition-all">
+                          <SelectValue placeholder="Override Role" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl border-gray-100">
+                          <SelectItem value="tourist" className="font-bold text-xs rounded-lg">PROVISION TOURIST</SelectItem>
+                          <SelectItem value="guide" className="font-bold text-xs rounded-lg">ELEVATE TO GUIDE</SelectItem>
+                          <SelectItem value="admin" className="font-bold text-xs rounded-lg">PLATFORM ADMINISTRATOR</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="flex gap-3">
@@ -297,7 +299,7 @@ export default function UserManagement() {
                           className="flex-1 rounded-xl border-red-100 text-red-600 bg-red-50/30 hover:bg-red-50 hover:border-red-200 font-black text-[10px] uppercase tracking-widest h-12 shadow-sm shadow-red-500/5"
                           onClick={() => handleStatusUpdate(user._id, "INACTIVE")}
                         >
-                          <XCircle className="h-4 w-4 mr-2" /> Suspend 
+                          <XCircle className="h-4 w-4 mr-2" /> Suspend
                         </Button>
                       ) : (
                         <Button
@@ -331,9 +333,9 @@ export default function UserManagement() {
               This will permanently delete <span className="font-black text-white">{userToDelete?.name}</span>'s profile and all associated data.
             </AlertDialogDescription>
           </div>
-          
+
           <AlertDialogFooter className="p-8 gap-4 flex-col sm:flex-row-reverse sm:justify-start">
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-red-600 hover:bg-red-700 text-white rounded-xl font-black text-xs uppercase tracking-widest h-12 px-8 flex-1"
             >

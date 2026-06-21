@@ -1,3 +1,5 @@
+// app/types/booking.interface.ts 
+
 import { IListing } from "./listing.interface";
 import { IUser } from "./user.interface";
 
@@ -15,22 +17,7 @@ export enum PaymentStatus {
   FAILED = "FAILED"
 }
 
-// export interface IBooking {
-//   id: string;
-//   listing: IListing;
-//   tourTitle:string;
-//   guide: IUser;
-//   tourist: IUser;
-//   touristName:string;
-//   date: Date;
-//   guestCount: number;
-//   status: BookingStatus;
-//   totalPrice: number;
-//   paymentStatus: PaymentStatus;
-//   createdAt: string;
-//   updatedAt: string;
-//   guideName:string
-// }
+
 export interface IBooking {
   _id: string;
   tourist: {
@@ -63,7 +50,7 @@ export interface IBooking {
   createdAt: string;
   updatedAt: string;
   meetingPoint?: string;
-  totalAmount ?: number;
+  totalAmount?: number;
 }
 
 export interface ICreateBookingPayload {

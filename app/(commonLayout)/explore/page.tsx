@@ -1,3 +1,4 @@
+//local-guide-frontend-assignment\local-guide-frontend\my-app\app\(commonLayout)\explore\page.tsx 
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
@@ -12,7 +13,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Loader2, MapPin, Search } from "lucide-react";
 
-// আলাদা কম্পোনেন্ট যেখানে useSearchParams ব্যবহার হবে
+
 function ExploreContent() {
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -187,7 +188,7 @@ function ExploreContent() {
   );
 }
 
-// মূল পেজ কম্পোনেন্ট - Suspense দিয়ে র‍্যাপ করা
+
 export default function ExplorePage() {
   return (
     <Suspense fallback={

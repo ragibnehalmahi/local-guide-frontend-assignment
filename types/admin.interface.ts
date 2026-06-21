@@ -1,4 +1,4 @@
- 
+// types/admin.interface.ts 
 export interface IAdminDashboardMeta {
   totalUsers: number;
   totalGuides: number;

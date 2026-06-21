@@ -1,3 +1,5 @@
+//app/(dashboardLayout)/tourist/bookings/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -29,7 +31,7 @@ export default function TouristBookingsPage() {
     try {
       const response = await serverFetch.get('/bookings');
       const result = await response.json();
-      
+
       if (result.success) {
         setBookings(result.data || []);
       } else {
@@ -122,7 +124,7 @@ export default function TouristBookingsPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Details Block */}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
@@ -134,7 +136,7 @@ export default function TouristBookingsPage() {
                         {booking.status}
                       </Badge>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-y-2 gap-x-4 mt-4 text-sm text-slate-600">
                       <div className="flex items-center">
                         <MapPin className="w-4 h-4 mr-2 text-slate-400" />
@@ -150,12 +152,12 @@ export default function TouristBookingsPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="mt-6 pt-4 border-t border-slate-100 flex gap-3 justify-end items-center">
                     {booking.status === "COMPLETED" && (
-                      <Button 
+                      <Button
                         onClick={() => openReviewModal(booking)}
-                        variant="outline" 
+                        variant="outline"
                         className="text-blue-600 border-blue-200 hover:bg-blue-50 text-sm h-9"
                       >
                         <MessageSquare className="w-4 h-4 mr-2" /> Write Review
@@ -163,10 +165,10 @@ export default function TouristBookingsPage() {
                     )}
 
                     {booking.paymentStatus !== "PAID" && booking.status === "CONFIRMED" && (
-                      <Button 
+                      <Button
                         onClick={() => handlePayment(booking._id)}
                         disabled={paymentLoading === booking._id}
-                        variant="default" 
+                        variant="default"
                         className="bg-emerald-600 hover:bg-emerald-700 text-sm h-9"
                       >
                         {paymentLoading === booking._id ? (

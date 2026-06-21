@@ -1,4 +1,5 @@
-import TouristListings from "@/components/modules/Tourist/TouristListings";  
+// app/(dashboardLayout)/tourist/dashboard/listings/page.tsx  
+import TouristListings from "@/components/modules/Tourist/TouristListings";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
 import { getListings } from "@/services/listing/listing.service";
@@ -16,8 +17,8 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
   return (
     <Suspense fallback={<TableSkeleton columns={4} rows={6} />}>
-      <TouristListings 
-        listings={listingsResult?.data || []} 
+      <TouristListings
+        listings={listingsResult?.data || []}
         meta={listingsResult?.meta}
       />
     </Suspense>
@@ -25,4 +26,3 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 }
 
 
- 

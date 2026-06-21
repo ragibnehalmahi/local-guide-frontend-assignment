@@ -1,3 +1,5 @@
+//app/types/payment.interface.ts  
+
 export enum PaymentStatus {
   PENDING = "PENDING",
   PAID = "PAID",

@@ -1,3 +1,5 @@
+// src/components/shared/PublicNavbar.tsx 
+
 import { getCookie } from "@/services/auth/tokenHandlers";
 import { Menu } from "lucide-react";
 import Link from "next/link";

@@ -6,8 +6,5 @@ const nextConfig = {
       { protocol: 'https', hostname: '**' },
     ],
   },
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
 };
 module.exports = nextConfig;

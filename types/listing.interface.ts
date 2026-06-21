@@ -1,3 +1,5 @@
+//app/types/listing.interface.ts    
+
 import { IUser } from "./user.interface";
 
 export enum ListingCategory {
@@ -18,24 +20,7 @@ export interface IListingLocation {
   country: string;
 }
 
-// export interface IListing {
-//   id: string;
-//   title: string;
-//   description: string;
-//   price: number;
-//   durationHours: number;
-//   maxGroupSize: number;
-//   meetingPoint: string;
-//   languages: string[];
-//   category: ListingCategory;
-//   images: string[];
-//   location: IListingLocation;
-//   guide: IUser;
-//   active: boolean;
-//   availableDates: Date[];
-//   createdAt: string;
-//   updatedAt: string;
-// }
+
 export interface IListing {
   _id: string;
   id?: string;
@@ -63,7 +48,7 @@ export interface IListing {
   durationHours: number;
   maxGroupSize: number;
   meetingPoint: string;
-   
+
   availableDates: string[];
   createdAt: string;
   updatedAt: string;

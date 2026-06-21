@@ -1,191 +1,115 @@
-
+// services/user/user.service.ts
 'use server';
- import { UserRole } from './../../types/auth.interface';
-// import { jwtDecode } from "jwt-decode";
- import jwt, { JwtPayload } from "jsonwebtoken";
+
+import { UserRole } from './../../types/auth.interface';
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from 'next/headers';
+import { serverFetch } from "@/lib/server-fetch";
+import { revalidateTag } from "next/cache";
+import { UserInfo } from "@/types/user.interface";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-/* eslint-disable @typescript-eslint/no-explicit-any */
- 
 
-import { serverFetch } from "@/lib/server-fetch";
-import { zodValidator } from '@/lib/zodValidator';  
-import { registerPatientValidationZodSchema } from '@/zod/auth.validation';  
-import { UserInfo } from "@/types/user.interface";
-import { getCookie } from "../auth/tokenHandlers";
-import { revalidate } from '@/lib/revalidate';
-// import { jwt } from "zod";
- 
-
-/**
- * Handles patient registration process through Server Actions
- */
-// export const register = async (prevState: any, formData: FormData): Promise<any> => {
-//   try {
-//     // 1. Extract raw data from FormData
-//     const rawData = Object.fromEntries(formData.entries());
-    
-//     // 2. Validate input using Zod
-//     const validationResult = zodValidator(rawData, registerPatientValidationZodSchema);
-
-//     if (!validationResult.success) {
-//       return {
-//         success: false,
-//         errors: validationResult.errors, // Assuming validator returns error details
-//         message: "Invalid input data",
-//       };
-//     }
-
-//     const { name, email, address, password } = validationResult.data;
-
-//     // 3. Structure the data for API (Payload Construction)
-//     const apiPayload = {
-//       password,
-//       patient: { name, email, address },
-//     };
-
-//     // 4. Prepare multi-part form data for server-to-server fetch
-//     const multipartData = new FormData();
-//     multipartData.append("data", JSON.stringify(apiPayload));
-
-//     const profileImage = formData.get("file");
-//     if (profileImage instanceof File && profileImage.size > 0) {
-//       multipartData.append("file", profileImage);
-//     }
-
-//     // 5. API Request
-//     const response = await serverFetch.post("/user/create-patient", {
-//       body: multipartData,
-//     });
-
-//     const apiResult = await response.json();
-
-//     // 6. Post-registration logic (Auto Login)
-//     if (apiResult?.success) {
-//       await loginUser(prevState, formData);
-//       return apiResult;
-//     }
-
-//     return apiResult;
-
-//   } catch (err: any) {
-//     // Handle Next.js specific redirect errors correctly
-//     if (err?.digest?.startsWith("NEXT_REDIRECT")) {
-//       throw err;
-//     }
-
-//     console.error("Registration Error:", err);
-
-//     return {
-//       success: false,
-//       message: process.env.NODE_ENV === "development" 
-//         ? err.message 
-//         : "Something went wrong during registration.",
-//     };
-//   }
-// };
-
-async function getAuthHeaders() {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get('accessToken')?.value;
-  
-  return {
-    'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
-}
-
+// ==================== GET MY PROFILE ====================
 export async function getMyProfile() {
   try {
-    const headers = await getAuthHeaders();
-    
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      headers,
+    const response = await serverFetch.get("/users/me", {
       cache: 'no-store',
     });
 
-    const data = await response.json();
-    
-    if (!response.ok || !data.success) {
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
       return {
         success: false,
-        message: data.message || 'Failed to fetch profile',
+        message: result.message || 'Failed to fetch profile',
       };
     }
 
     return {
       success: true,
-      data: data.data,
+      data: result.data,
     };
 
   } catch (error: any) {
+    console.error("getMyProfile error:", error);
     return {
       success: false,
       message: error.message || 'Failed to fetch profile',
     };
   }
 }
- 
+
+// ==================== GET USER INFO (for layout/auth) ====================
 export const getUserInfo = async (): Promise<UserInfo | any> => {
-    try {
-        const response = await serverFetch.get("/users/me", {
-            next: { tags: ["user-info"], revalidate: 180 },
-        });
+  try {
+    const response = await serverFetch.get("/users/me", {
+      next: { tags: ["user-info"], revalidate: 180 },
+    });
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch user from backend");
-        }
-
-        const result = await response.json();
-
-        // যদি ব্যাকএন্ড ডাটা সফলভাবে দেয়, তাহলে টোকেন ভেরিফাই করার দরকার নেই।
-        // কারণ serverFetch অলরেডি টোকেন নিয়ে গেছে এবং ব্যাকএন্ড সেটা ভেরিফাই করেই ডাটা দিয়েছে।
-        if (result.success && result.data) {
-            return {
-                name: result.data.admin?.name || result.data.tourist?.name || result.data.guide?.name || result.data.name || "Unknown User",
-                ...result.data
-            };
-        }
-        
-        throw new Error("User data not found");
-    } catch (error: any) {
-        console.error("getUserInfo Error:", error.message);
-        return {
-            id: "",
-            name: "Unknown User",
-            email: "",
-            role: "tourist",
-        };
+    if (!response.ok) {
+      throw new Error("Failed to fetch user from backend");
     }
+
+    const result = await response.json();
+
+    if (result.success && result.data) {
+      return {
+        name: result.data.admin?.name || result.data.tourist?.name || result.data.guide?.name || result.data.name || "Unknown User",
+        ...result.data
+      };
+    }
+
+    throw new Error("User data not found");
+  } catch (error: any) {
+    console.error("getUserInfo Error:", error.message);
+    return {
+      id: "",
+      name: "Unknown User",
+      email: "",
+      role: "tourist",
+    };
+  }
 };
+
+// ==================== UPDATE MY PROFILE (with FormData) ====================
 export async function updateMyProfile(formData: FormData) {
   try {
-    const response = await serverFetch.patch("/users/update-profile", {
-      method: 'PATCH',
-      headers: {
-        // DON'T set Content-Type for FormData - browser will set it automatically with boundary
-        'Authorization': `Bearer ${typeof window !== 'undefined' ? localStorage.getItem('token') : ''}`
-      },
-      body: formData
+    // ✅ serverFetch.patch automatically adds Authorization header
+    // ✅ Do NOT set Content-Type – browser handles it for FormData
+    const response = await serverFetch.patch("/users/me", {
+      body: formData,
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Update profile error response:", errorText);
-      throw new Error(`Failed: ${response.status}`);
+      return {
+        success: false,
+        message: `Server error: ${response.status}`,
+      };
     }
 
-    return await response.json();
+    const result = await response.json();
+
+    if (result.success) {
+      revalidateTag("user-info", { expire: 0 });
+      revalidateTag("user-profile", { expire: 0 });
+      revalidateTag("my-profile", { expire: 0 });
+    }
+
+    return result;
+
   } catch (error: any) {
     console.error("Error updating profile:", error);
-    return { 
-      success: false, 
-      message: error.message || "Failed to update profile" 
+    return {
+      success: false,
+      message: error.message || "Failed to update profile",
     };
   }
 }
 
+// ==================== GET ALL USERS (ADMIN) ====================
 export async function getAllUsers(params?: {
   page?: number;
   limit?: number;
@@ -194,8 +118,6 @@ export async function getAllUsers(params?: {
   status?: string;
 }) {
   try {
-    const headers = await getAuthHeaders();
-    
     const queryParams = new URLSearchParams();
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -205,27 +127,30 @@ export async function getAllUsers(params?: {
       });
     }
 
-    const response = await fetch(`${API_BASE_URL}/users?${queryParams.toString()}`, {
-      headers,
+    const queryString = queryParams.toString();
+    const endpoint = queryString ? `/users?${queryString}` : "/users";
+
+    const response = await serverFetch.get(endpoint, {
       cache: 'no-store',
     });
 
-    const data = await response.json();
-    
-    if (!response.ok || !data.success) {
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
       return {
         success: false,
-        message: data.message || 'Failed to fetch users',
+        message: result.message || 'Failed to fetch users',
       };
     }
 
     return {
       success: true,
-      data: data.data,
-      meta: data.meta,
+      data: result.data,
+      meta: result.meta,
     };
 
   } catch (error: any) {
+    console.error("getAllUsers error:", error);
     return {
       success: false,
       message: error.message || 'Failed to fetch users',
@@ -233,35 +158,37 @@ export async function getAllUsers(params?: {
   }
 }
 
+// ==================== UPDATE USER STATUS (ADMIN) ====================
 export async function updateUserStatus(userId: string, status: string) {
   try {
-    const headers = await getAuthHeaders();
-    
-    const response = await fetch(`${API_BASE_URL}/users/${userId}/status`, {
-      method: 'PATCH',
-      headers,
+    const response = await serverFetch.patch(`/users/${userId}/status`, {
       body: JSON.stringify({ status }),
     });
 
-    const data = await response.json();
-    
-    if (!response.ok || !data.success) {
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
       return {
         success: false,
-        message: data.message || 'Failed to update user status',
+        message: result.message || 'Failed to update user status',
       };
+    }
+
+    if (result.success) {
+      revalidateTag("admin-users", { expire: 0 });
+      revalidateTag("admin-dashboard", { expire: 0 });
     }
 
     return {
       success: true,
-      data: data.data,
+      data: result.data,
     };
 
   } catch (error: any) {
+    console.error("updateUserStatus error:", error);
     return {
       success: false,
       message: error.message || 'Failed to update user status',
     };
   }
 }
- 

@@ -1,3 +1,4 @@
+//local-guide-frontend/my-app/app/(commonLayout)/profile/[id]/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -97,8 +98,8 @@ export default function PublicProfilePage() {
             Array.isArray(listingsRes.data?.data?.result)
               ? listingsRes.data.data.result
               : Array.isArray(listingsRes.data?.data)
-              ? listingsRes.data.data
-              : []
+                ? listingsRes.data.data
+                : []
           );
           setReviews(Array.isArray(reviewsRes.data?.data) ? reviewsRes.data.data : []);
         }
@@ -132,9 +133,9 @@ export default function PublicProfilePage() {
   const isGuide = user.role === "guide";
   const memberSince = user.createdAt
     ? new Date(user.createdAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-      })
+      year: "numeric",
+      month: "long",
+    })
     : "Unknown";
 
   // Calculate rating distribution
@@ -423,11 +424,10 @@ export default function PublicProfilePage() {
                             {[1, 2, 3, 4, 5].map((s) => (
                               <Star
                                 key={s}
-                                className={`w-5 h-5 ${
-                                  s <= Math.round(user.rating || 0)
+                                className={`w-5 h-5 ${s <= Math.round(user.rating || 0)
                                     ? "fill-yellow-400 text-yellow-400"
                                     : "text-slate-200"
-                                }`}
+                                  }`}
                               />
                             ))}
                           </div>
@@ -483,11 +483,10 @@ export default function PublicProfilePage() {
                                 {[1, 2, 3, 4, 5].map((s) => (
                                   <Star
                                     key={s}
-                                    className={`w-4 h-4 ${
-                                      s <= review.rating
+                                    className={`w-4 h-4 ${s <= review.rating
                                         ? "fill-yellow-400 text-yellow-400"
                                         : "text-slate-200"
-                                    }`}
+                                      }`}
                                   />
                                 ))}
                               </div>

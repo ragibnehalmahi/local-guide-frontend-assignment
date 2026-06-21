@@ -1,3 +1,5 @@
+// src/components/modules/Home/TopRatedGuides.tsx       
+
 import { Star, MapPin, Globe } from 'lucide-react';
 import Link from 'next/link';
 
@@ -20,10 +22,10 @@ export default function TopRatedGuides() {
             Connect with passionate locals who know their cities best
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {guides.map((guide, index) => (
-            <Link 
+            <Link
               href={`/guide/${index + 1}`}
               key={index}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
@@ -31,8 +33,8 @@ export default function TopRatedGuides() {
               <div className="p-6">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-white shadow">
-                    <img 
-                      src={guide.image} 
+                    <img
+                      src={guide.image}
                       alt={guide.name}
                       className="w-full h-full object-cover"
                     />
@@ -45,7 +47,7 @@ export default function TopRatedGuides() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex items-center">
                     <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
@@ -53,10 +55,10 @@ export default function TopRatedGuides() {
                   </div>
                   <span className="text-gray-500 text-sm">({guide.reviews} reviews)</span>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2">
                   {guide.expertise.map((exp, idx) => (
-                    <span 
+                    <span
                       key={idx}
                       className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
                     >
@@ -65,7 +67,7 @@ export default function TopRatedGuides() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                 <button className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-300">
                   View Profile
@@ -74,10 +76,10 @@ export default function TopRatedGuides() {
             </Link>
           ))}
         </div>
-        
+
         <div className="text-center mt-12">
-          <Link 
-            href="/guides" 
+          <Link
+            href="/guides"
             className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
           >
             <Globe className="w-5 h-5" />
