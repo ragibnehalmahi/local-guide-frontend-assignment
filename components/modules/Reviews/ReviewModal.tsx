@@ -1,4 +1,5 @@
-// components/modules/Reviews/ReviewModal.tsx
+//components/modules/Reviews/ReviewModal.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -36,7 +37,6 @@ export default function ReviewModal({
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,31 +56,21 @@ export default function ReviewModal({
 
       if (result.success) {
         toast.success("Thank you! Your review has been submitted.");
-        setSubmitted(true);
-        if (onSuccess) onSuccess();
         onClose();
+        if (onSuccess) onSuccess();
       } else {
-        // 🚨 যদি ব্যাকএন্ড 400 “already submitted” মেসেজ দেয়
-        if (result.message?.toLowerCase().includes("already submitted")) {
-          toast.error("You have already reviewed this booking.");
-          setSubmitted(true);
-          if (onSuccess) onSuccess(); // parent-এ জানান
-          onClose();
-        } else {
-          toast.error(result.message || "Failed to submit review.");
-        }
+        toast.error(result.message || "Failed to submit review.");
       }
     } catch (error: any) {
       console.error("Review Submission Error:", error);
-      // নেটওয়ার্ক বা অন্য কোনো এরর
-      toast.error(error.message || "Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Write a Review</DialogTitle>
@@ -131,7 +121,6 @@ export default function ReviewModal({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               required
-              disabled={submitted}
             />
           </div>
 
@@ -140,13 +129,13 @@ export default function ReviewModal({
               type="button"
               variant="outline"
               onClick={onClose}
-              disabled={loading || submitted}
+              disabled={loading}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={loading || submitted}
+              disabled={loading}
               className="bg-blue-600 hover:bg-blue-700 font-semibold px-8"
             >
               {loading ? (
@@ -154,8 +143,6 @@ export default function ReviewModal({
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...
                 </>
-              ) : submitted ? (
-                "Already Reviewed"
               ) : (
                 "Submit Review"
               )}
