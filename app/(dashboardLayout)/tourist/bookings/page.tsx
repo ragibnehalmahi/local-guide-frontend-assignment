@@ -17,14 +17,14 @@ export default function TouristBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState<string | null>(null);
 
-  // 🔥 রিভিউ দেওয়া বুকিংগুলোর সেট (localStorage থেকে লোড)
+ 
   const [reviewedBookingIds, setReviewedBookingIds] = useState<Set<string>>(new Set());
 
   // Review states
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
 
-  // কম্পোনেন্ট মাউন্টে localStorage থেকে লোড করুন
+ 
   useEffect(() => {
     const stored = localStorage.getItem('reviewed_bookings');
     if (stored) {
@@ -81,12 +81,12 @@ export default function TouristBookingsPage() {
     setIsReviewModalOpen(true);
   };
 
-  // 🔥 রিভিউ সফল হলে বা "already submitted" পেলে এই ফাংশন কল হবে
+  
   const markAsReviewed = (bookingId: string) => {
     const newSet = new Set(reviewedBookingIds);
     newSet.add(bookingId);
     setReviewedBookingIds(newSet);
-    // localStorage-এ সংরক্ষণ করুন
+ 
     localStorage.setItem('reviewed_bookings', JSON.stringify([...newSet]));
   };
 
