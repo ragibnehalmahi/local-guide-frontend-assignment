@@ -1,7 +1,9 @@
-// app/(dashboardLayout)/tourist/bookings/page.tsx
+//app/(dashboardLayout)/tourist/bookings/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Calendar, MapPin, ExternalLink, CreditCard } from "lucide-react";
 import { toast } from "sonner";
@@ -17,24 +19,12 @@ export default function TouristBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState<string | null>(null);
 
- 
-  const [reviewedBookingIds, setReviewedBookingIds] = useState<Set<string>>(new Set());
-
   // Review states
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
 
- 
   useEffect(() => {
-    const stored = localStorage.getItem('reviewed_bookings');
-    if (stored) {
-      try {
-        const ids = JSON.parse(stored) as string[];
-        setReviewedBookingIds(new Set(ids));
-      } catch {
-        // ignore
-      }
-    }
+    fetchMyBookings();
   }, []);
 
   const fetchMyBookings = async () => {
@@ -54,10 +44,6 @@ export default function TouristBookingsPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchMyBookings();
-  }, []);
 
   const handlePayment = async (bookingId: string) => {
     setPaymentLoading(bookingId);
@@ -79,15 +65,6 @@ export default function TouristBookingsPage() {
   const openReviewModal = (booking: any) => {
     setSelectedBooking(booking);
     setIsReviewModalOpen(true);
-  };
-
-  
-  const markAsReviewed = (bookingId: string) => {
-    const newSet = new Set(reviewedBookingIds);
-    newSet.add(bookingId);
-    setReviewedBookingIds(newSet);
- 
-    localStorage.setItem('reviewed_bookings', JSON.stringify([...newSet]));
   };
 
   const getStatusColor = (status: string) => {
@@ -130,91 +107,86 @@ export default function TouristBookingsPage() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {bookings.map((booking) => {
-            const isReviewed = reviewedBookingIds.has(booking._id);
-            return (
-              <Card key={booking._id} className="overflow-hidden hover:shadow-sm transition-shadow">
-                <div className="flex flex-col sm:flex-row">
-                  {/* Visual / Dates Block */}
-                  <div className="bg-slate-50 p-6 flex flex-col justify-center items-center border-r border-slate-100 sm:w-48">
-                    <div className="text-center">
-                      <p className="text-slate-500 text-sm font-medium uppercase tracking-wider mb-1">
-                        {new Date(booking.date).toLocaleString('default', { month: 'short' })}
-                      </p>
-                      <p className="text-4xl font-bold text-slate-900">
-                        {new Date(booking.date).getDate()}
-                      </p>
-                      <p className="text-slate-500 text-sm mt-1">
-                        {new Date(booking.date).getFullYear()}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Details Block */}
-                  <div className="p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl font-bold text-slate-900">
-                          {booking.listing?.title || booking.toureTitle || "Tour Booking"}
-                        </h3>
-                        <Badge className={`${getStatusColor(booking.status)} border-none shadow-none font-semibold`}>
-                          {booking.status}
-                        </Badge>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-y-2 gap-x-4 mt-4 text-sm text-slate-600">
-                        <div className="flex items-center">
-                          <MapPin className="w-4 h-4 mr-2 text-slate-400" />
-                          <span>Meeting Point TBA</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-2 text-slate-400" />
-                          <span>{booking.guestCount} Guest{booking.guestCount > 1 ? 's' : ''}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <CreditCard className="w-4 h-4 mr-2 text-slate-400" />
-                          <span>Total: ${booking.totalPrice} ({booking.paymentStatus})</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex gap-3 justify-end items-center">
-                      {booking.status === "COMPLETED" && (
-                        <Button
-                          onClick={() => openReviewModal(booking)}
-                          variant="outline"
-                          className={`text-sm h-9 ${isReviewed ? 'opacity-50 cursor-not-allowed' : 'text-blue-600 border-blue-200 hover:bg-blue-50'}`}
-                          disabled={isReviewed}
-                        >
-                          <MessageSquare className="w-4 h-4 mr-2" />
-                          {isReviewed ? "Already Reviewed" : "Write Review"}
-                        </Button>
-                      )}
-
-                      {booking.paymentStatus !== "PAID" && booking.status === "CONFIRMED" && (
-                        <Button
-                          onClick={() => handlePayment(booking._id)}
-                          disabled={paymentLoading === booking._id}
-                          variant="default"
-                          className="bg-emerald-600 hover:bg-emerald-700 text-sm h-9"
-                        >
-                          {paymentLoading === booking._id ? (
-                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                          ) : (
-                            <CreditCard className="w-4 h-4 mr-2" />
-                          )}
-                          Pay Now
-                        </Button>
-                      )}
-                      <Button variant="outline" className="text-sm h-9" onClick={() => window.location.href = `/tours/${booking.listing?._id || booking.listing}`}>
-                        <ExternalLink className="w-4 h-4 mr-2" /> View Listing
-                      </Button>
-                    </div>
+          {bookings.map((booking) => (
+            <Card key={booking._id} className="overflow-hidden hover:shadow-sm transition-shadow">
+              <div className="flex flex-col sm:flex-row">
+                {/* Visual / Dates Block */}
+                <div className="bg-slate-50 p-6 flex flex-col justify-center items-center border-r border-slate-100 sm:w-48">
+                  <div className="text-center">
+                    <p className="text-slate-500 text-sm font-medium uppercase tracking-wider mb-1">
+                      {new Date(booking.date).toLocaleString('default', { month: 'short' })}
+                    </p>
+                    <p className="text-4xl font-bold text-slate-900">
+                      {new Date(booking.date).getDate()}
+                    </p>
+                    <p className="text-slate-500 text-sm mt-1">
+                      {new Date(booking.date).getFullYear()}
+                    </p>
                   </div>
                 </div>
-              </Card>
-            );
-          })}
+
+                {/* Details Block */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-xl font-bold text-slate-900">
+                        {booking.listing?.title || booking.toureTitle || "Tour Booking"}
+                      </h3>
+                      <Badge className={`${getStatusColor(booking.status)} border-none shadow-none font-semibold`}>
+                        {booking.status}
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-y-2 gap-x-4 mt-4 text-sm text-slate-600">
+                      <div className="flex items-center">
+                        <MapPin className="w-4 h-4 mr-2 text-slate-400" />
+                        <span>Meeting Point TBA</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-slate-400" />
+                        <span>{booking.guestCount} Guest{booking.guestCount > 1 ? 's' : ''}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <CreditCard className="w-4 h-4 mr-2 text-slate-400" />
+                        <span>Total: ${booking.totalPrice} ({booking.paymentStatus})</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-slate-100 flex gap-3 justify-end items-center">
+                    {booking.status === "COMPLETED" && (
+                      <Button
+                        onClick={() => openReviewModal(booking)}
+                        variant="outline"
+                        className="text-blue-600 border-blue-200 hover:bg-blue-50 text-sm h-9"
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2" /> Write Review
+                      </Button>
+                    )}
+
+                    {booking.paymentStatus !== "PAID" && booking.status === "CONFIRMED" && (
+                      <Button
+                        onClick={() => handlePayment(booking._id)}
+                        disabled={paymentLoading === booking._id}
+                        variant="default"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-sm h-9"
+                      >
+                        {paymentLoading === booking._id ? (
+                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        ) : (
+                          <CreditCard className="w-4 h-4 mr-2" />
+                        )}
+                        Pay Now
+                      </Button>
+                    )}
+                    <Button variant="outline" className="text-sm h-9" onClick={() => window.location.href = `/tours/${booking.listing?._id || booking.listing}`}>
+                      <ExternalLink className="w-4 h-4 mr-2" /> View Listing
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
       )}
 
@@ -224,10 +196,7 @@ export default function TouristBookingsPage() {
           onClose={() => setIsReviewModalOpen(false)}
           bookingId={selectedBooking._id}
           guideName={selectedBooking.guide?.name}
-          onSuccess={() => {
-            fetchMyBookings();
-            markAsReviewed(selectedBooking._id);
-          }}
+          onSuccess={fetchMyBookings}
         />
       )}
     </div>
