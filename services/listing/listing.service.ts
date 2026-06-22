@@ -170,6 +170,7 @@ export async function searchListings(filters: {
 
 
 
+// services/listing/listing.service.ts
 export async function getListingById(listingId: string) {
   try {
     const response = await serverFetch.get(
@@ -182,34 +183,52 @@ export async function getListingById(listingId: string) {
       }
     );
 
-    // Check response status and content-type
     const contentType = response.headers.get("content-type");
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      console.error(`HTTP error! status: ${response.status}`);
+      return {
+        success: false,
+        data: null,
+        message: `Server error (${response.status})`,
+      };
     }
 
     if (!contentType || !contentType.includes("application/json")) {
-      // If response is not JSON, it's likely an HTML error page
       const text = await response.text();
-      console.error("Non-JSON response received:", text.substring(0, 200));
-      throw new Error("Server returned non-JSON response");
+      console.error("Non-JSON response:", text.substring(0, 200));
+      return {
+        success: false,
+        data: null,
+        message: "Invalid server response",
+      };
     }
 
     const result = await response.json();
 
-    if (result.success) {
+    // ✅ ব্যাকএন্ডের রেসপন্স চেক
+    if (!result.success || !result.data) {
       return {
-        success: true,
-        data: result.data,
+        success: false,
+        data: null,
+        message: result.message || "Listing not found",
+      };
+    }
+
+ 
+    if (result.data.active === false) {
+      return {
+        success: false,
+        data: null,
+        message: "This tour is no longer available",
       };
     }
 
     return {
-      success: false,
-      data: null,
-      message: result.message || "Failed to fetch listing",
+      success: true,
+      data: result.data,
     };
+
   } catch (error: any) {
     console.error("Error fetching listing:", error);
     return {
